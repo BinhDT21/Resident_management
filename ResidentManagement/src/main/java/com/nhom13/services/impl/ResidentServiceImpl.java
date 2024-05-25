@@ -5,9 +5,11 @@
 package com.nhom13.services.impl;
 
 import com.nhom13.pojo.Resident;
+import com.nhom13.pojo.User;
 import com.nhom13.repositories.ResidentRepository;
 import com.nhom13.services.ResidentService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +24,28 @@ public class ResidentServiceImpl implements ResidentService{
     private ResidentRepository resRepo;
 
     @Override
-    public List<Resident> loadResident() {
-        return this.resRepo.loadResident();
+    public List<Resident> loadResident(Map<String, String> params) {
+        return this.resRepo.loadResident(params);
     }
+
+    @Override
+    public void addResident(User u) {
+        System.out.print(u);
+        this.resRepo.addResident(u);
+    }
+
+    @Override
+    public User getUserById(int id) {
+        return this.resRepo.getUserById(id);
+    }
+
+    @Override
+    public void deleteUser(int id) {
+        this.resRepo.deleteUser(id);
+    }
+
+    
+
+    
     
 }

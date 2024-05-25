@@ -1,6 +1,7 @@
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\pojo\ResidentVisitor.java
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\pojo\Resident.java
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\pojo\Invoice.java
+C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\controllers\ResidentController.java
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\pojo\User.java
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\pojo\Visitor.java
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\configs\WebAppContextConfig.java
@@ -8,6 +9,7 @@ C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\j
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\controllers\IndexController.java
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\pojo\Admin.java
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\pojo\Question.java
+C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\controllers\ApiResidentController.java
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\pojo\ElectronicLocker.java
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\repositories\ResidentRepository.java
 C:\Users\ADMIN\OneDrive\Desktop\ResidentManagement\ResidentManagement\src\main\java\com\nhom13\configs\HibernateConfig.java

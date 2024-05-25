@@ -43,7 +43,7 @@ public class ElectronicLocker implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "electronicLockerId")
     private Set<Item> itemSet;
     @JoinColumn(name = "resident_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Resident residentId;
 
     public ElectronicLocker() {
