@@ -54,7 +54,7 @@ public class Resident implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "residentId")
     private Set<Invoice> invoiceSet;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User userId;
 
     public Resident() {

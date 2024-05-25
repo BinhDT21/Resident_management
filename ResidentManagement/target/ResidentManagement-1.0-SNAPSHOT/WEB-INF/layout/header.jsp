@@ -15,16 +15,17 @@
                  style="width:70px;" class="rounded-pill"> 
         </a>
 
-
+        <c:url value="/" var="index"/>
         <div class="collapse navbar-collapse" id="mynavbar">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)">Resident management</a>
+                    
+                    <a class="nav-link" href="${index}">Resident management</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Tiện ích</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Quản lý cư dân</a></li>
+                        <li><a class="dropdown-item" href="${index}">Quản lý cư dân</a></li>
                         <li><a class="dropdown-item" href="#">Quản lý tủ đồ</a></li>
                         <li><a class="dropdown-item" href="#">Quản lý phản hồi</a></li>
                         <li><a class="dropdown-item" href="#">Khảo sát</a></li>
@@ -32,9 +33,9 @@
                     </ul>
                 </li>
             </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" type="text" placeholder="Search">
-                <button class="btn btn-primary" type="button">Search</button>
+            <form class="d-flex" action="<c:url value="/"/>">
+                <input class="form-control me-2" type="text" placeholder="Tên cư dân" name="name">
+                <button class="btn btn-primary" type="submit">Search</button>
             </form>
         </div>
     </div>

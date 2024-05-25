@@ -5,34 +5,30 @@
 package com.nhom13.controllers;
 
 import com.nhom13.services.ResidentService;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author ADMIN
  */
-@Controller
-public class IndexController {
-    
+@RestController
+@RequestMapping("/api/")
+@CrossOrigin
+public class ApiResidentController {
     @Autowired
     private ResidentService resSer;
     
-    @RequestMapping("/")
-    public String index (Model model, @RequestParam() Map<String,String> params){
-        
-        model.addAttribute("residents",this.resSer.loadResident(params));
-        return "index";
+    @DeleteMapping("/resident/{residentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(value = "residentId") int id) {
+        this.resSer.deleteUser(id);
     }
-    
-//    @RequestMapping("/residentId")
-//    public void deleteResident (@RequestParam(value = "residentId") int id){
-//        this.resSer.deleteUser(id);
-//    }
- 
 }

@@ -15,4 +15,9 @@
         <put-attribute name="content" value="/WEB-INF/pages/index.jsp" />
     </definition>
     
+    <definition name="resident" extends="baseLayout">
+        <put-attribute name="title" value="Thêm cư dân" />
+        <put-attribute name="content" value="/WEB-INF/pages/resident.jsp" />
+    </definition>
+    
 </tiles-definitions>
