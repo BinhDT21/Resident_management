@@ -4,6 +4,8 @@
  */
 package com.nhom13.services;
 
+
+
 import com.nhom13.pojo.Resident;
 import com.nhom13.pojo.User;
 import java.util.List;

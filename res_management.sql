@@ -53,6 +53,7 @@ CREATE TABLE `answer` (
   `content` int NOT NULL,
   `resident_id` int NOT NULL,
   `question_id` int NOT NULL,
+  `created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_answer_question_idx` (`question_id`),
   KEY `fk_answer_resident_idx` (`resident_id`),
@@ -67,7 +68,7 @@ CREATE TABLE `answer` (
 
 LOCK TABLES `answer` WRITE;
 /*!40000 ALTER TABLE `answer` DISABLE KEYS */;
-INSERT INTO `answer` VALUES (1,1,1,1),(2,1,2,1),(3,1,3,1),(4,1,1,2),(5,1,2,2),(6,1,3,2);
+INSERT INTO `answer` VALUES (1,1,1,1,'2024-05-25 19:23:22'),(2,1,2,1,'2024-05-25 19:23:22'),(3,1,3,1,'2024-05-25 19:23:22'),(4,1,1,2,'2024-05-25 19:23:22'),(5,1,2,2,'2024-05-25 19:23:22'),(6,1,3,2,'2024-05-25 19:23:22');
 /*!40000 ALTER TABLE `answer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -85,7 +86,7 @@ CREATE TABLE `electronic_locker` (
   KEY `fk_resident_idx` (`resident_id`),
   KEY `fk_locker_resident_idx` (`resident_id`),
   CONSTRAINT `fk_locker_resident` FOREIGN KEY (`resident_id`) REFERENCES `resident` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +95,7 @@ CREATE TABLE `electronic_locker` (
 
 LOCK TABLES `electronic_locker` WRITE;
 /*!40000 ALTER TABLE `electronic_locker` DISABLE KEYS */;
-INSERT INTO `electronic_locker` VALUES (1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8),(9,9),(10,10);
+INSERT INTO `electronic_locker` VALUES (1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8),(9,9),(10,10),(11,13),(12,14),(13,15);
 /*!40000 ALTER TABLE `electronic_locker` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,10 +111,11 @@ CREATE TABLE `feedback` (
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` tinyint DEFAULT '0',
   `resident_id` int NOT NULL,
+  `created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_feedback_resident_idx` (`resident_id`),
   CONSTRAINT `fk_feedback_resident` FOREIGN KEY (`resident_id`) REFERENCES `resident` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,7 +124,7 @@ CREATE TABLE `feedback` (
 
 LOCK TABLES `feedback` WRITE;
 /*!40000 ALTER TABLE `feedback` DISABLE KEYS */;
-INSERT INTO `feedback` VALUES (1,'Cần tăng cường an ninh về đêm',0,3);
+INSERT INTO `feedback` VALUES (1,'Cần tăng cường an ninh về đêm',0,3,'2024-05-24 19:20:41'),(2,'Cầu thang hơi dơ',0,4,'2024-05-24 19:20:41'),(3,'Hồ bơi quá bẩn',0,1,'2024-05-15 19:20:41'),(4,'Phòng bên A1 quá ồn ào',0,1,'2024-05-15 19:20:41'),(5,'Căn hộ nhìn xấu quá',0,2,'2024-05-25 19:20:41'),(6,'Tôi đói bụng quá',0,6,'2024-05-25 19:20:41'),(7,'Máy lạnh phong B4 bị hư',0,6,'2024-05-25 19:22:53');
 /*!40000 ALTER TABLE `feedback` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,6 +143,7 @@ CREATE TABLE `invoice` (
   `status` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'unpaid',
   `payment_prove` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `resident_id` int NOT NULL,
+  `created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_invoice_resident_idx` (`resident_id`),
   CONSTRAINT `fk_invoice_resident` FOREIGN KEY (`resident_id`) REFERENCES `resident` (`id`)
@@ -153,7 +156,7 @@ CREATE TABLE `invoice` (
 
 LOCK TABLES `invoice` WRITE;
 /*!40000 ALTER TABLE `invoice` DISABLE KEYS */;
-INSERT INTO `invoice` VALUES (1,'Phí gửi xe',30000,'2025-05-10','unpaid',NULL,1),(2,'Phí gửi xe',30000,'2025-05-10','unpaid',NULL,2),(3,'Phí gửi xe',30000,'2025-05-10','unpaid',NULL,3);
+INSERT INTO `invoice` VALUES (1,'Phí gửi xe',30000,'2025-05-10','unpaid',NULL,1,'2024-05-25 19:22:02'),(2,'Phí gửi xe',30000,'2025-05-10','unpaid',NULL,2,'2024-05-25 19:22:02'),(3,'Phí gửi xe',30000,'2025-05-10','unpaid',NULL,3,'2024-05-25 19:22:02');
 /*!40000 ALTER TABLE `invoice` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -196,6 +199,7 @@ CREATE TABLE `question` (
   `id` int NOT NULL AUTO_INCREMENT,
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `survey_id` int NOT NULL,
+  `created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_question_survey_idx` (`survey_id`),
   CONSTRAINT `fk_question_survey` FOREIGN KEY (`survey_id`) REFERENCES `survey` (`id`)
@@ -208,7 +212,7 @@ CREATE TABLE `question` (
 
 LOCK TABLES `question` WRITE;
 /*!40000 ALTER TABLE `question` DISABLE KEYS */;
-INSERT INTO `question` VALUES (1,'Tình hình an ninh có tốt không',1),(2,'Thái độ làm việc của nhân viên',1);
+INSERT INTO `question` VALUES (1,'Tình hình an ninh có tốt không',1,'2024-05-25 19:22:22'),(2,'Thái độ làm việc của nhân viên',1,'2024-05-25 19:22:22');
 /*!40000 ALTER TABLE `question` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -226,7 +230,7 @@ CREATE TABLE `resident` (
   PRIMARY KEY (`id`),
   KEY `fk_resident_user_idx` (`user_id`),
   CONSTRAINT `fk_resident_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -235,7 +239,7 @@ CREATE TABLE `resident` (
 
 LOCK TABLES `resident` WRITE;
 /*!40000 ALTER TABLE `resident` DISABLE KEYS */;
-INSERT INTO `resident` VALUES (1,0,2),(2,0,3),(3,0,4),(4,0,5),(5,0,6),(6,0,7),(7,0,8),(8,0,9),(9,0,10),(10,0,11);
+INSERT INTO `resident` VALUES (1,0,2),(2,0,3),(3,0,4),(4,0,5),(5,0,6),(6,0,7),(7,0,8),(8,0,9),(9,0,10),(10,0,11),(13,0,22),(14,0,23),(15,0,24);
 /*!40000 ALTER TABLE `resident` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -279,6 +283,7 @@ CREATE TABLE `survey` (
   `id` int NOT NULL AUTO_INCREMENT,
   `admin_id` int NOT NULL,
   `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_survey_admin_idx` (`admin_id`),
   CONSTRAINT `fk_survey_admin` FOREIGN KEY (`admin_id`) REFERENCES `admin` (`id`)
@@ -291,7 +296,7 @@ CREATE TABLE `survey` (
 
 LOCK TABLES `survey` WRITE;
 /*!40000 ALTER TABLE `survey` DISABLE KEYS */;
-INSERT INTO `survey` VALUES (1,1,'Tình hình an ninh');
+INSERT INTO `survey` VALUES (1,1,'Tình hình an ninh','2024-05-25 19:23:09');
 /*!40000 ALTER TABLE `survey` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -317,7 +322,7 @@ CREATE TABLE `user` (
   `role` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'resident',
   `active` tinyint DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,7 +331,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Dương','Bình',0,'2003-08-10','TP HCM','0707920834','binh@gmail.com','admin','123456','https://asset.cloudinary.com/dwdvnztnn/343c81dd2c6600f7dc1e5ad619770d8c','admin',1),(2,'Nguyễn','Kiệt',0,'2003-02-21','TP HCM','0707937952','kiet@gmail.com','user1','123456',NULL,'resident',1),(3,'Trần ','Chinh',0,'2003-07-13','TP HCM','0707064504','chinh@gmail.com','user2','123456',NULL,'resident',1),(4,'Phạm','Vương',0,'2003-02-09','Tây ninh','0939532068','vuong@gmail.com','user3','123456',NULL,'resident',1),(5,'Nguyễn Thị','Hương',1,'1994-04-15','Hà Nội','0939494631','huong@gmail.com','user4','123456',NULL,'resident',1),(6,'Trần Văn ','Nam',0,'2000-08-03','Khánh Hòa','0858037593','nam@gmail.com','user5','123456',NULL,'resident',1),(7,'Lê Ngọc','Mai',1,'1999-02-10','Đồng Nai','0753659461','mai@gmail.com','user6','123456',NULL,'resident',1),(8,'Phạm Đức','Long',0,'2003-09-19','TP HCM','0985205814','long@gmail.com','user7','123456',NULL,'resident',1),(9,'Vũ Minh ','Tuấn',0,'1992-12-06','Hà Nội','0959593751','tuan@gmail.com','user8','123456',NULL,'resident',1),(10,'Dương Tuấn','Kiệt',0,'1999-04-24','Hậu Giang','0507849561','kiet@gmail.com','user9','123456',NULL,'resident',1),(11,'Trần Thái','Sơn',0,'2000-11-02','Quãng Ngải','0909951560','son@gmail.com','user10','123456',NULL,'resident',1);
+INSERT INTO `user` VALUES (1,'Dương','Bình',0,'2003-08-10','TP HCM','0707920834','binh@gmail.com','admin','123456','https://asset.cloudinary.com/dwdvnztnn/343c81dd2c6600f7dc1e5ad619770d8c','admin',1),(2,'Nguyễn','Kiệt',0,'2003-02-21','TP HCM','0707937952','kiet@gmail.com','user1','123456',NULL,'resident',1),(3,'Trần ','Chinh',0,'2003-07-13','TP HCM','0707064504','chinh@gmail.com','user2','123456',NULL,'resident',1),(4,'Phạm','Vương',0,'2003-02-09','Tây ninh','0939532068','vuong@gmail.com','user3','123456',NULL,'resident',1),(5,'Nguyễn Thị','Hương',1,'1994-04-15','Hà Nội','0939494631','huong@gmail.com','user4','123456',NULL,'resident',1),(6,'Trần Văn ','Nam',0,'2000-08-03','Khánh Hòa','0858037593','nam@gmail.com','user5','123456',NULL,'resident',1),(7,'Lê Ngọc','Mai',1,'1999-02-10','Đồng Nai','0753659461','mai@gmail.com','user6','123456',NULL,'resident',1),(8,'Phạm Đức','Long',0,'2003-09-19','TP HCM','0985205814','long@gmail.com','user7','123456',NULL,'resident',1),(9,'Vũ Minh ','Tuấn',0,'1992-12-06','Hà Nội','0959593751','tuan@gmail.com','user8','123456',NULL,'resident',1),(10,'Dương Tuấn','Kiệt',0,'1999-04-24','Hậu Giang','0507849561','kiet@gmail.com','user9','123456',NULL,'resident',1),(11,'Trần Thái','Sơn',0,'2000-11-02','Quãng Ngải','0909951560','son@gmail.com','user10','123456',NULL,'resident',1),(22,'Le Thuy','Van',1,'2000-11-08','TP HCM','0707854300','van@gmail.com','user11','123456',NULL,'resident',0),(23,'Duong','Phong',0,'1970-01-15','Tien Giang','0939290484','phong@gmail.com','user12','123456',NULL,'resident',1),(24,'Nguyen Ngoc','Chau',1,'1980-09-17','Thai Nguyen','0949275967','chau@gmail.com','user13','123456',NULL,'resident',1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -364,4 +369,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-24 17:33:05
+-- Dump completed on 2024-05-26  2:40:29

@@ -37,7 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Invoice.findByAmount", query = "SELECT i FROM Invoice i WHERE i.amount = :amount"),
     @NamedQuery(name = "Invoice.findByDueDate", query = "SELECT i FROM Invoice i WHERE i.dueDate = :dueDate"),
     @NamedQuery(name = "Invoice.findByStatus", query = "SELECT i FROM Invoice i WHERE i.status = :status"),
-    @NamedQuery(name = "Invoice.findByPaymentProve", query = "SELECT i FROM Invoice i WHERE i.paymentProve = :paymentProve")})
+    @NamedQuery(name = "Invoice.findByPaymentProve", query = "SELECT i FROM Invoice i WHERE i.paymentProve = :paymentProve"),
+    @NamedQuery(name = "Invoice.findByCreatedDate", query = "SELECT i FROM Invoice i WHERE i.createdDate = :createdDate")})
 public class Invoice implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -64,6 +65,9 @@ public class Invoice implements Serializable {
     @Size(max = 255)
     @Column(name = "payment_prove")
     private String paymentProve;
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
     @JoinColumn(name = "resident_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Resident residentId;
@@ -127,6 +131,14 @@ public class Invoice implements Serializable {
 
     public void setPaymentProve(String paymentProve) {
         this.paymentProve = paymentProve;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Resident getResidentId() {
