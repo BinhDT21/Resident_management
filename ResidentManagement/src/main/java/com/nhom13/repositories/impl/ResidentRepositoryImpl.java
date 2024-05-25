@@ -49,7 +49,15 @@ public class ResidentRepositoryImpl implements ResidentRepository {
         List<Predicate> predicates = new ArrayList<>();
 
         predicates.add(b.equal(rU.get("id"), rR.get("userId")));
-        predicates.add(b.equal(rU.get("active"), 1));
+
+        String block = params.get("block");
+        if (block != null && !block.isEmpty()) {
+            predicates.add(b.equal(rU.get("active"), 0));
+        } else {
+            predicates.add(b.equal(rU.get("active"), 1));
+        }
+        
+        
 
         String name = params.get("name");
         if (name != null && !name.isEmpty()) {

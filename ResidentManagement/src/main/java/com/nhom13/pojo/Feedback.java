@@ -5,6 +5,7 @@
 package com.nhom13.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -31,7 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Feedback.findAll", query = "SELECT f FROM Feedback f"),
     @NamedQuery(name = "Feedback.findById", query = "SELECT f FROM Feedback f WHERE f.id = :id"),
     @NamedQuery(name = "Feedback.findByContent", query = "SELECT f FROM Feedback f WHERE f.content = :content"),
-    @NamedQuery(name = "Feedback.findByStatus", query = "SELECT f FROM Feedback f WHERE f.status = :status")})
+    @NamedQuery(name = "Feedback.findByStatus", query = "SELECT f FROM Feedback f WHERE f.status = :status"),
+    @NamedQuery(name = "Feedback.findByCreatedDate", query = "SELECT f FROM Feedback f WHERE f.createdDate = :createdDate")})
 public class Feedback implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,6 +51,9 @@ public class Feedback implements Serializable {
     private String content;
     @Column(name = "status")
     private Short status;
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
     @JoinColumn(name = "resident_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Resident residentId;
@@ -85,6 +92,14 @@ public class Feedback implements Serializable {
 
     public void setStatus(Short status) {
         this.status = status;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Resident getResidentId() {
