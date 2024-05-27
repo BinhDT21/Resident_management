@@ -34,5 +34,5 @@
         <put-attribute name="title" value="Quản lý vật phẩm" />
         <put-attribute name="content" value="/WEB-INF/pages/item-detail.jsp" />
     </definition>
-
+    
 </tiles-definitions>
