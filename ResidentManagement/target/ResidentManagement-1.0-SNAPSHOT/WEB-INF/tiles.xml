@@ -29,5 +29,10 @@
         <put-attribute name="title" value="Quản lý vật phẩm" />
         <put-attribute name="content" value="/WEB-INF/pages/item.jsp" />
     </definition>
+
+    <definition name="item-detail" extends="baseLayout">
+        <put-attribute name="title" value="Quản lý vật phẩm" />
+        <put-attribute name="content" value="/WEB-INF/pages/item-detail.jsp" />
+    </definition>
     
 </tiles-definitions>

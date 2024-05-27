@@ -10,9 +10,6 @@
 
 <h1 class="text-center text-dark mt-1">QUẢN LÝ CƯ DÂN</h1>
 
-
-
-
 <form class="d-flex" action="<c:url value="/"/>">
     <input type="hidden" name="block" value="0"/>
     <button class="btn btn-dark mt-2 mb-2" type="submit" >Cư dân đã khóa</button>
