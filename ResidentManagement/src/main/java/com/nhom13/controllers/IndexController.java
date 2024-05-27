@@ -4,6 +4,7 @@
  */
 package com.nhom13.controllers;
 
+import com.nhom13.services.ElectronicLockerService;
 import com.nhom13.services.ResidentService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
