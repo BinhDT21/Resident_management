@@ -58,7 +58,7 @@ public class Question implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionId")
     private Set<Answer> answerSet;
     @JoinColumn(name = "survey_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Survey surveyId;
 
     public Question() {

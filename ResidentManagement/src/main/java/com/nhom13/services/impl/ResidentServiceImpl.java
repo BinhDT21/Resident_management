@@ -11,6 +11,7 @@ import com.nhom13.services.ResidentService;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,17 +23,14 @@ public class ResidentServiceImpl implements ResidentService{
     
     @Autowired
     private ResidentRepository resRepo;
+  
 
     @Override
     public List<Resident> loadResident(Map<String, String> params) {
         return this.resRepo.loadResident(params);
     }
 
-    @Override
-    public void addResident(User u) {
-        System.out.print(u);
-        this.resRepo.addResident(u);
-    }
+    
 
     @Override
     public User getUserById(int id) {

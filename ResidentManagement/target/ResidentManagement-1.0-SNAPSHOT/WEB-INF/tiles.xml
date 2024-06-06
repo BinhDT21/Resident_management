@@ -20,4 +20,34 @@
         <put-attribute name="content" value="/WEB-INF/pages/resident.jsp" />
     </definition>
     
+    <definition name="feedbacks" extends="baseLayout">
+        <put-attribute name="title" value="Quản lý phản hồi" />
+        <put-attribute name="content" value="/WEB-INF/pages/feedback.jsp" />
+    </definition>
+    
+    <definition name="surveys" extends="baseLayout">
+        <put-attribute name="title" value="Quản lý khảo sát" />
+        <put-attribute name="content" value="/WEB-INF/pages/survey.jsp" />
+    </definition>
+    
+    <definition name="surveyDetail" extends="baseLayout">
+        <put-attribute name="title" value="Chi tiết khảo sát" />
+        <put-attribute name="content" value="/WEB-INF/pages/survey_detail.jsp" />
+    </definition>
+    
+    <definition name="addSurvey" extends="baseLayout">
+        <put-attribute name="title" value="Tạo khảo sát" />
+        <put-attribute name="content" value="/WEB-INF/pages/add_survey.jsp" />
+    </definition>
+    
+    <definition name="login" extends="baseLayout">
+        <put-attribute name="title" value="Trang đăng nhập" />
+        <put-attribute name="content" value="/WEB-INF/pages/login.jsp" />
+    </definition>
+    
+    <definition name="admin" extends="baseLayout">
+        <put-attribute name="title" value="Thêm quản trị viên" />
+        <put-attribute name="content" value="/WEB-INF/pages/admin.jsp" />
+    </definition>
+    
 </tiles-definitions>

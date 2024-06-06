@@ -6,6 +6,7 @@ package com.nhom13.controllers;
 
 import com.nhom13.pojo.User;
 import com.nhom13.services.ResidentService;
+import com.nhom13.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,8 @@ public class ResidentController {
     
     @Autowired
     private ResidentService resSer;
+    @Autowired
+    private UserService userSer;
     
     @GetMapping("/resident")
     public String createUserView (Model model){
@@ -32,7 +35,7 @@ public class ResidentController {
     @PostMapping("/resident")
     public String createUser (@ModelAttribute(value = "user") User u){
         
-        this.resSer.addResident(u);
+        this.userSer.addResident(u);
         return "redirect:/";
     }
     

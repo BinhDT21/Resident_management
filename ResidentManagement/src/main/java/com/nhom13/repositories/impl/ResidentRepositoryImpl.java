@@ -71,23 +71,7 @@ public class ResidentRepositoryImpl implements ResidentRepository {
         return q.getResultList();
     }
 
-    //Add resident by User and create a electronic locker for this resident 
-    @Override
-    public void addResident(User u) {
-        Session s = this.factory.getObject().getCurrentSession();
-        u.setRole("resident");
-        u.setActive(Short.parseShort("1"));
-        s.save(u);
-
-        Resident r = new Resident();
-        r.setBalance(Long.parseLong("0"));
-        r.setUserId(u);
-        s.save(r);
-
-        ElectronicLocker l = new ElectronicLocker();
-        l.setResidentId(r);
-        s.save(l);
-    }
+    
 
     @Override
     public User getUserById(int id) {
