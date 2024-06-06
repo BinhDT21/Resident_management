@@ -23,6 +23,8 @@
             <tiles:insertAttribute name="content" />
         </section>
         <tiles:insertAttribute name="footer" />
+        
     </body>
+    
     
 </html>

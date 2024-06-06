@@ -60,6 +60,8 @@ public class Survey implements Serializable {
     @JoinColumn(name = "admin_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Admin adminId;
+    @Column(name = "active")
+    private Short active;
 
     public Survey() {
     }
@@ -137,6 +139,20 @@ public class Survey implements Serializable {
     @Override
     public String toString() {
         return "com.nhom13.pojo.Survey[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the active
+     */
+    public Short getActive() {
+        return active;
+    }
+
+    /**
+     * @param active the active to set
+     */
+    public void setActive(Short active) {
+        this.active = active;
     }
     
 }
