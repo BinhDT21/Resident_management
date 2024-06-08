@@ -98,24 +98,4 @@ public class ResidentRepositoryImpl implements ResidentRepository {
         User u = this.getUserById(id);
         u.setActive(Short.parseShort("0"));
     }
-
-//    @Override
-//    public List<Resident> getWithInvoices(Map<String, String> params) {
-//        Session s = factory.getObject().getCurrentSession();
-//        CriteriaBuilder b = s.getCriteriaBuilder();
-//        CriteriaQuery q = b.createQuery(Resident.class);
-//        Root root = q.from(Resident.class);
-//
-//        root.fetch("invoiceSet", JoinType.LEFT);
-//        q.select(root);
-////        filter page
-//        Query query = s.createQuery(q);
-//
-//        List<Resident> residents = query.getResultList();
-//        residents.stream().forEach(r -> r.setInvoiceSet(r.getInvoiceSet().stream()
-//                .filter(i -> i.getStatus().equals("unpaid"))
-//                .collect(Collectors.toSet())));
-//        return residents;
-//    }
-
 }
