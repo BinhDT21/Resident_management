@@ -6,19 +6,7 @@ package com.nhom13.pojo;
 
 import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.Cascade;
@@ -57,6 +45,37 @@ public class Resident implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User userId;
+
+    @Transient
+    private long unpaidInvoiceCount;
+    @Transient
+    private long waitingInvoiceCount;
+    @Transient
+    private long paidInvoiceCount;
+
+    public long getUnpaidInvoiceCount() {
+        return unpaidInvoiceCount;
+    }
+
+    public void setUnpaidInvoiceCount(long unpaidInvoiceCount) {
+        this.unpaidInvoiceCount = unpaidInvoiceCount;
+    }
+
+    public long getWaitingInvoiceCount() {
+        return waitingInvoiceCount;
+    }
+
+    public void setWaitingInvoiceCount(long waitingInvoiceCount) {
+        this.waitingInvoiceCount = waitingInvoiceCount;
+    }
+
+    public long getPaidInvoiceCount() {
+        return paidInvoiceCount;
+    }
+
+    public void setPaidInvoiceCount(long paidInvoiceCount) {
+        this.paidInvoiceCount = paidInvoiceCount;
+    }
 
     public Resident() {
     }

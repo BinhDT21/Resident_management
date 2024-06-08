@@ -33,11 +33,6 @@
                            href="<c:url value="/electronic-lockers/${el.id}"/>">
                             Chi tiết
                         </a>
-
-                        <a class="btn btn-warning"
-                           href="<c:url value="/electronic-lockers/${el.id}/items"/>">
-                            Danh sách vật phẩm
-                        </a>
                     </td>
                 </tr>
             </c:forEach>

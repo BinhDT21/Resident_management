@@ -34,5 +34,20 @@
         <put-attribute name="title" value="Quản lý vật phẩm" />
         <put-attribute name="content" value="/WEB-INF/pages/item-detail.jsp" />
     </definition>
+
+    <definition name="invoice-detail" extends="baseLayout">
+        <put-attribute name="title" value="Chi tiết hóa đơn" />
+        <put-attribute name="content" value="/WEB-INF/pages/invoice-detail.jsp" />
+    </definition>
+
+    <definition name="invoice-residents" extends="baseLayout">
+        <put-attribute name="title" value="Quản lý thanh toán" />
+        <put-attribute name="content" value="/WEB-INF/pages/invoice-residents.jsp" />
+    </definition>
+
+    <definition name="invoice-resident-detail" extends="baseLayout">
+        <put-attribute name="title" value="Quản lý thanh toán" />
+        <put-attribute name="content" value="/WEB-INF/pages/invoice-resident-detail.jsp" />
+    </definition>
     
 </tiles-definitions>

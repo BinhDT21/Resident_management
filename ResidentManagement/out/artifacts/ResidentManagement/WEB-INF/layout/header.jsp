@@ -29,7 +29,7 @@
                         <li><a class="dropdown-item" href="<c:url value="/electronic-lockers"/>">Quản lý tủ đồ</a></li>
                         <li><a class="dropdown-item" href="#">Quản lý phản hồi</a></li>
                         <li><a class="dropdown-item" href="#">Khảo sát</a></li>
-                        <li><a class="dropdown-item" href="#">Hóa đơn</a></li>
+                        <li><a class="dropdown-item" href="<c:url value='/invoice-residents'/>">Hóa đơn</a></li>
                     </ul>
                 </li>
             </ul>

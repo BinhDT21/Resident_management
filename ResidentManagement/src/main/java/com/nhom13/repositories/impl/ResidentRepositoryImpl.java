@@ -11,11 +11,10 @@ import com.nhom13.repositories.ResidentRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -56,8 +55,6 @@ public class ResidentRepositoryImpl implements ResidentRepository {
         } else {
             predicates.add(b.equal(rU.get("active"), 1));
         }
-        
-        
 
         String name = params.get("name");
         if (name != null && !name.isEmpty()) {
@@ -101,5 +98,24 @@ public class ResidentRepositoryImpl implements ResidentRepository {
         User u = this.getUserById(id);
         u.setActive(Short.parseShort("0"));
     }
+
+//    @Override
+//    public List<Resident> getWithInvoices(Map<String, String> params) {
+//        Session s = factory.getObject().getCurrentSession();
+//        CriteriaBuilder b = s.getCriteriaBuilder();
+//        CriteriaQuery q = b.createQuery(Resident.class);
+//        Root root = q.from(Resident.class);
+//
+//        root.fetch("invoiceSet", JoinType.LEFT);
+//        q.select(root);
+////        filter page
+//        Query query = s.createQuery(q);
+//
+//        List<Resident> residents = query.getResultList();
+//        residents.stream().forEach(r -> r.setInvoiceSet(r.getInvoiceSet().stream()
+//                .filter(i -> i.getStatus().equals("unpaid"))
+//                .collect(Collectors.toSet())));
+//        return residents;
+//    }
 
 }
