@@ -68,4 +68,9 @@ public class UserServiceImpl implements UserService {
         return this.userRepo.getAdminByUsername(username);
     }
 
+    @Override
+    public boolean authUser(String username, String password) {
+        return this.userRepo.authUser(username, password);
+    }
+
 }

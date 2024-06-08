@@ -17,4 +17,5 @@ public interface UserService  extends  UserDetailsService{
     void addAdmin(User u);
     User getUserByUsername (String username); 
     Admin getAdminByUsername (String username);
+    boolean authUser (String username, String password);
 }

@@ -19,7 +19,9 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -27,11 +29,14 @@ import org.springframework.transaction.annotation.Transactional;
  * @author ADMIN
  */
 @Repository
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public class UserRepositoryImpl implements UserRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
+    
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public User getUserByUsername(String username) {
@@ -96,5 +101,12 @@ public class UserRepositoryImpl implements UserRepository {
         
         Query query = s.createQuery(q);
         return (Admin)query.getSingleResult();
+    }
+
+    @Override
+    public boolean authUser(String username, String password) {
+        User u = this.getUserByUsername(username);
+        
+        return this.passwordEncoder.matches(password, u.getPassword());
     }
 }
