@@ -69,26 +69,15 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     @Override
     public void createOrUpdateInvoice(Invoice invoice) {
         Session s = this.factory.getObject().getCurrentSession();
-        LocalDate dueDate = invoice.getDueDate();
-        LocalDate atNow = LocalDate.now();
+//        LocalDate dueDate = invoice.getDueDate();
+//        LocalDate atNow = LocalDate.now();
 
 //        long dayisDifference = ChronoUnit.DAYS.between(atNow, dueDate);
-
-        String status = "";
-        String paymentProve = invoice.getPaymentProve();
-
-        if(invoice.getId() > 0) {
-            if(paymentProve != null && !paymentProve.isEmpty() && (atNow.isBefore(dueDate) || atNow.isEqual(dueDate))) {
-                status = "paid";
-            } else if (paymentProve != null && !paymentProve.isEmpty()) {
-                status = "waiting";
-            } else
-                status = "late";
-            invoice.setStatus(status);
-            s.update(invoice);
-        } else
+        if(invoice.getId() == null) {
             invoice.setStatus("unpaid");
-        s.save(invoice);
+            s.save(invoice);
+        } else
+            s.update(invoice);
 
     }
 
