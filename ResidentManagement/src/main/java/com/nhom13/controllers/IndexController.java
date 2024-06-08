@@ -4,6 +4,7 @@
  */
 package com.nhom13.controllers;
 
+import com.nhom13.services.ElectronicLockerService;
 import com.nhom13.services.ResidentService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class IndexController {
 
     @Autowired
     private ResidentService resSer;
+    @Autowired
+    private ElectronicLockerService lockerSer;
 
     @RequestMapping("/")
     public String index(Model model, @RequestParam() Map<String, String> params) {
@@ -28,5 +31,4 @@ public class IndexController {
         model.addAttribute("residents", this.resSer.loadResident(params));
         return "index";
     }
-
 }

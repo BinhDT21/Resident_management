@@ -11,11 +11,10 @@ import com.nhom13.repositories.ResidentRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -56,8 +55,6 @@ public class ResidentRepositoryImpl implements ResidentRepository {
         } else {
             predicates.add(b.equal(rU.get("active"), 1));
         }
-        
-        
 
         String name = params.get("name");
         if (name != null && !name.isEmpty()) {
@@ -85,5 +82,4 @@ public class ResidentRepositoryImpl implements ResidentRepository {
         User u = this.getUserById(id);
         u.setActive(Short.parseShort("0"));
     }
-
 }

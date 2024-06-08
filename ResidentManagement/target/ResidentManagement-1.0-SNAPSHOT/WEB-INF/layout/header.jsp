@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
     <div class="container-fluid">
@@ -28,10 +28,10 @@
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Tiện ích</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="${index}">Quản lý cư dân</a></li>
-                        <li><a class="dropdown-item" href="#">Quản lý tủ đồ</a></li>
+                        <li><a class="dropdown-item" href="<c:url value="/electronic-lockers"/>">Quản lý tủ đồ</a></li>
+                        <li><a class="dropdown-item" href="<c:url value='/invoice-residents'/>">Hóa đơn</a></li>
                         <li><a class="dropdown-item" href="${feedbacks}">Quản lý phản hồi</a></li>
                         <li><a class="dropdown-item" href="${surveys}">Quản lý khảo sát</a></li>
-                        <li><a class="dropdown-item" href="#">Hóa đơn</a></li>
                     </ul>
                 </li>
                 <c:if test="${pageContext.request.userPrincipal.name != null }">

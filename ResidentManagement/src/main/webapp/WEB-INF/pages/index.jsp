@@ -9,12 +9,6 @@
 <!DOCTYPE html>
 
 <h1 class="text-center text-dark mt-1">QUẢN LÝ CƯ DÂN</h1>
-
-
-
-
-
-
 <div class="d-flex justify-content mb-2">
     <form class="d-flex mx-2" action="<c:url value="/"/>">
         <input type="hidden" name="block" value="0"/>

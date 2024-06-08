@@ -42,8 +42,4 @@ public class ResidentServiceImpl implements ResidentService{
         this.resRepo.deleteUser(id);
     }
 
-    
-
-    
-    
 }
