@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author ADMIN
  */
 @Repository
-@Transactional(propagation = Propagation.REQUIRED)
+@Transactional
 public class ResidentRepositoryImpl implements ResidentRepository {
 
     @Autowired

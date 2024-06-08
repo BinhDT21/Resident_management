@@ -16,4 +16,5 @@ public interface UserRepository {
     void addAdmin(User u);
     Admin getAdminByUsername (String username);
     User getUserByUsername (String username); 
+    boolean authUser (String username, String password);
 }
