@@ -73,9 +73,7 @@ public class Invoice implements Serializable {
     @ManyToOne(optional = false)
     private Resident residentId;
     @Column(name = "active")
-    private Short active;
-
-
+    private Short active;    
     public Invoice() {
     }
 
@@ -184,6 +182,20 @@ public class Invoice implements Serializable {
     @Override
     public String toString() {
         return "com.nhom13.pojo.Invoice[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the active
+     */
+    public Short getActive() {
+        return active;
+    }
+
+    /**
+     * @param active the active to set
+     */
+    public void setActive(Short active) {
+        this.active = active;
     }
     
 }

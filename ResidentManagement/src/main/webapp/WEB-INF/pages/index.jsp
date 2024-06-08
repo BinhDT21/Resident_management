@@ -9,16 +9,15 @@
 <!DOCTYPE html>
 
 <h1 class="text-center text-dark mt-1">QUẢN LÝ CƯ DÂN</h1>
+<div class="d-flex justify-content mb-2">
+    <form class="d-flex mx-2" action="<c:url value="/"/>">
+        <input type="hidden" name="block" value="0"/>
+        <button class="btn btn-dark mt-2 mb-2" type="submit" >Cư dân đã khóa</button>
+    </form>
 
-<form class="d-flex" action="<c:url value="/"/>">
-    <input type="hidden" name="block" value="0"/>
-    <button class="btn btn-dark mt-2 mb-2" type="submit" >Cư dân đã khóa</button>
-</form>
-
-<c:url value="/resident" var="resident"/>
-<a class="btn btn-primary mt-2 mb-2" href="${resident}">Thêm cư dân</a>
-
-
+    <c:url value="/resident" var="resident"/>
+    <a class="btn btn-primary mt-2 mb-2 mx-2" href="${resident}">Thêm cư dân</a>
+</div>
 
 <table class="table">
     <tr>
@@ -39,7 +38,7 @@
 
             <c:if test="${r[6]==1}">
                 <c:url value="/api/resident/${r[7]}" var="deleteUrl"/>
-                <td><button onclick="deleteResident('${deleteUrl}',${r[7]})" class="btn btn-danger" >Xóa</button></td>
+                <td><button onclick="deleteResident('${deleteUrl}')" class="btn btn-danger" >Xóa</button></td>
             </c:if>
 
 

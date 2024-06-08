@@ -30,7 +30,8 @@ import org.springframework.web.servlet.view.JstlView;
 @ComponentScan(basePackages = {
     "com.nhom13.controllers",
     "com.nhom13.repositories",
-    "com.nhom13.services"
+    "com.nhom13.services",
+    "com.nhom13.components"
 })
 @EnableTransactionManagement
 public class WebAppContextConfig implements WebMvcConfigurer {

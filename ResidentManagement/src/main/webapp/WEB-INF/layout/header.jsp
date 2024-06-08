@@ -16,22 +16,27 @@
         </a>
 
         <c:url value="/" var="index"/>
+        <c:url value="/feedbacks" var="feedbacks"/>
+        <c:url value="/surveys" var="surveys"/>
+        <c:url value="/admin" var="admin"/>
+        <c:url value="/logout" var="logout"/>
         <div class="collapse navbar-collapse" id="mynavbar">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    
-                    <a class="nav-link" href="${index}">Resident management</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="${index}">Resident management</a></li>
+                <li class="nav-item"><a class="nav-link" href="${admin}">Đăng ký quản trị viên</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Tiện ích</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="${index}">Quản lý cư dân</a></li>
                         <li><a class="dropdown-item" href="<c:url value="/electronic-lockers"/>">Quản lý tủ đồ</a></li>
-                        <li><a class="dropdown-item" href="#">Quản lý phản hồi</a></li>
-                        <li><a class="dropdown-item" href="#">Khảo sát</a></li>
                         <li><a class="dropdown-item" href="<c:url value='/invoice-residents'/>">Hóa đơn</a></li>
+                        <li><a class="dropdown-item" href="${feedbacks}">Quản lý phản hồi</a></li>
+                        <li><a class="dropdown-item" href="${surveys}">Quản lý khảo sát</a></li>
                     </ul>
                 </li>
+                <c:if test="${pageContext.request.userPrincipal.name != null }">
+                    <li><a class="nav-link" href="${logout}">Đăng xuất</a></li>
+                    </c:if>
             </ul>
             <form class="d-flex" action="<c:url value="/"/>">
                 <input class="form-control me-2" type="text" placeholder="Tên cư dân" name="name">
