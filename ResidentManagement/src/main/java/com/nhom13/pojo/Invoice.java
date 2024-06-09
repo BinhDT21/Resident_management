@@ -183,19 +183,4 @@ public class Invoice implements Serializable {
     public String toString() {
         return "com.nhom13.pojo.Invoice[ id=" + id + " ]";
     }
-
-    /**
-     * @return the active
-     */
-    public Short getActive() {
-        return active;
-    }
-
-    /**
-     * @param active the active to set
-     */
-    public void setActive(Short active) {
-        this.active = active;
-    }
-    
 }
