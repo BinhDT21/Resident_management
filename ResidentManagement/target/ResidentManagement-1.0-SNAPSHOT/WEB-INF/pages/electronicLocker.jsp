@@ -30,7 +30,7 @@
                     <td>${el.residentId.userId.lastName} ${el.residentId.userId.firstName}</td>
                     <td>
                         <a class="btn btn-primary"
-                           href="<c:url value="/electronic-lockers/${el.id}"/>">
+                           href="<c:url value="/electronic-lockers/${el.id}/items"/>">
                             Chi tiết
                         </a>
                     </td>
