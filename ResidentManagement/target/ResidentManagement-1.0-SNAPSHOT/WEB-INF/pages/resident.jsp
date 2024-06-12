@@ -34,7 +34,7 @@
     <!--gioi tinh-->
 
     <div class="form-floating mb-3 mt-3">
-        <form:input  class="form-control"  id="dob"   placeholder="Ngày sinh" path="dob" />
+        <form:input type="date"  class="form-control"  id="dob"   placeholder="Ngày sinh" path="dob" />
         <label for="dob">Ngày sinh</label>
     </div>
 
