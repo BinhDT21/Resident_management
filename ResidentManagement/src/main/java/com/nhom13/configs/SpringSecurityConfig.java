@@ -4,6 +4,8 @@
  */
 package com.nhom13.configs;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -66,9 +68,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/survey_detail").access("hasAuthority('admin')")
                 .antMatchers("/login").permitAll()
                 .antMatchers("/logout").permitAll();
-                
-       
+
         http.csrf().disable();
+    }
+
+    @Bean
+    public Cloudinary cloudinary() {
+        Cloudinary cloudinary
+                = new Cloudinary(ObjectUtils.asMap(
+                        "cloud_name", "dwdvnztnn",
+                        "api_key", "571438538929217",
+                        "api_secret", "ZdK569SSxGMgAcDKPwatx2Lores",
+                        "secure", true));
+        return cloudinary;
     }
 
 }

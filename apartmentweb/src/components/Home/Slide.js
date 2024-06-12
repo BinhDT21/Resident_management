@@ -1,5 +1,5 @@
 
-import { Carousel, Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { Carousel} from "react-bootstrap";
 
 const Slide = () => {
     return (
