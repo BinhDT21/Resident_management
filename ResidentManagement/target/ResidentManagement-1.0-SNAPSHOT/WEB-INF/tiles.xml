@@ -76,8 +76,18 @@
     </definition>
     
     <definition name="admin" extends="baseLayout">
-        <put-attribute name="title" value="Thêm quản trị viên" />
+        <put-attribute name="title" value="Đăng ký admin" />
         <put-attribute name="content" value="/WEB-INF/pages/admin.jsp" />
+    </definition>
+    
+    <definition name="visitor" extends="baseLayout">
+        <put-attribute name="title" value="Quản lý khách" />
+        <put-attribute name="content" value="/WEB-INF/pages/visitor.jsp" />
+    </definition>
+    
+    <definition name="updateVisitor" extends="baseLayout">
+        <put-attribute name="title" value="Chỉnh sửa thông tin khách" />
+        <put-attribute name="content" value="/WEB-INF/pages/update_visitor.jsp" />
     </definition>
     
 </tiles-definitions>

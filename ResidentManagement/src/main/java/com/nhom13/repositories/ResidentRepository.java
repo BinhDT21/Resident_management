@@ -15,7 +15,6 @@ import java.util.Map;
  */
 public interface ResidentRepository {
     List<Resident> loadResident (Map<String, String> params);
-    
     User getUserById (int id);  //lay user theo id
     void deleteUser(int id);    //deactive user
 }

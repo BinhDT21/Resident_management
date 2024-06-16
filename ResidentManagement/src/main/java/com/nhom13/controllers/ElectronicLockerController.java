@@ -17,7 +17,7 @@ public class ElectronicLockerController {
 
     @GetMapping
     public String getAll(Map<String, String> params, Model model) {
-        model.addAttribute("electronicLockers", electronicLockerService.getAllElectronicLockers(params));
+        model.addAttribute("electronicLockers", this.electronicLockerService.getAllElectronicLockers(params));
         return "electronicLocker";
     }
 }

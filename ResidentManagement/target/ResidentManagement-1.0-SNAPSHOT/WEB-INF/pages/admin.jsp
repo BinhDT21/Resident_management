@@ -35,10 +35,10 @@
     <!--gioi tinh-->
 
     <div class="form-floating mb-3 mt-3">
-        <form:input  class="form-control"  id="dob"   placeholder="Ngày sinh" path="dob" />
+        <form:input type="date"  class="form-control"  id="dob"   placeholder="Ngày sinh" path="dob" />
         <label for="dob">Ngày sinh</label>
     </div>
-
+    
     <div class="form-floating mb-3 mt-3">
         <form:input class="form-control"  id="address"  placeholder="Địa chỉ" path="address" />
         <label for="address">Địa chỉ</label>
@@ -69,6 +69,6 @@
             Thêm quản trị viên
         </button>
     </div>  
-        
-      
+
+
 </form:form>

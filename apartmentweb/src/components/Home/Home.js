@@ -13,7 +13,6 @@ const Home = () => {
         return <Navigate to="/login" />
 
     if (user.avatar === null || user.avatar === '') {
-        console.info("home 15")
         return <Navigate to="/update" />
     }
 

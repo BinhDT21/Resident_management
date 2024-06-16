@@ -35,3 +35,36 @@ function blockSurvey(url) {
             alert("ERROR");
     });
 };
+
+//chuyen trang thai visitor
+function deleteVisitor(url) {
+    
+    fetch(url, {
+        method: 'delete'
+    }).then(res => {
+        if (res.status === 204)
+        {
+            alert("Xóa thành công !")
+            location.reload();
+        }
+        else
+            alert("ERROR");
+    });
+};
+
+
+//xoa item
+function deleteItem(url) {
+    
+    fetch(url, {
+        method: 'delete'
+    }).then(res => {
+        if (res.status === 204)
+        {
+            alert("Xóa thành công !")
+            location.reload();
+        }
+        else
+            alert("ERROR");
+    });
+};
