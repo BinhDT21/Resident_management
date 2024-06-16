@@ -4,7 +4,10 @@
  */
 package com.nhom13.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -17,6 +20,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,6 +41,34 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Visitor.findByRelation", query = "SELECT v FROM Visitor v WHERE v.relation = :relation")})
 public class Visitor implements Serializable {
 
+    /**
+     * @return the createdDate
+     */
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    /**
+     * @param createdDate the createdDate to set
+     */
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    /**
+     * @return the active
+     */
+    public Short getActive() {
+        return active;
+    }
+
+    /**
+     * @param active the active to set
+     */
+    public void setActive(Short active) {
+        this.active = active;
+    }
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +84,22 @@ public class Visitor implements Serializable {
     @Column(name = "relation")
     private String relation;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "visitorId")
+    @JsonIgnore
     private Set<ResidentVisitor> residentVisitorSet;
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
+    private Date createdDate;
+    @Column(name = "updated_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
+    private Date updatedDate;
+    @Column(name = "active")
+    private Short active;
+    @Size(max = 45)
+    @Column(name = "status")
+    private String status;
+
 
     public Visitor() {
     }
@@ -121,6 +169,34 @@ public class Visitor implements Serializable {
     @Override
     public String toString() {
         return "com.nhom13.pojo.Visitor[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    /**
+     * @return the updatedDate
+     */
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    /**
+     * @param updatedDate the updatedDate to set
+     */
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
     }
     
 }

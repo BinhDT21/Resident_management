@@ -10,6 +10,6 @@ public interface ElectronicLockerService {
     void updateElectronicLocker(ElectronicLocker el);
     void deleteElectronicLocker(int id);
     void addElectronicLocker(ElectronicLocker el);
-    List<ElectronicLocker> getAllElectronicLockers(Map<String, String> params);
+    List<Object[]> getAllElectronicLockers(Map<String, String> params);
 
 }

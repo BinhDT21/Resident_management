@@ -7,7 +7,10 @@ export const endpoints = {
     //ví dụ: 'categories' = '/api/categories/'
     'login' : '/api/login/',
     'current-user':"/api/current-user/",
-    'update-user':"/api/update-user/"
+    'update-user':"/api/update-user/",
+    'visitor':(residentId) => `/api/visitor/${residentId}/`,
+    'create-visitor':"/api/visitor/",
+    'delete-visitor':(visitorId) => `/api/visitor/${visitorId}/`
 }
 
 export const authApi =() => {

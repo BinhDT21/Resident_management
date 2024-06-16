@@ -10,4 +10,5 @@ public interface ItemRepository {
     List<Item> getAllItemById(int id, Map<String, String> params);
     Item getItemById(int itemId);
     void updateOrCreateItem(Item item);
+    void deleteItem (int id);
 }

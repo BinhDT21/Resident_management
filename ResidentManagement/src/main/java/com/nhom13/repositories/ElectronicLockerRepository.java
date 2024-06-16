@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ElectronicLockerRepository {
-    List<ElectronicLocker> getAllElectronicLockers(Map<String, String> params);
+    List<Object[]> getAllElectronicLockers(Map<String, String> params);
     void addElectronicLocker(ElectronicLocker el);
     ElectronicLocker getElectronicLockerById(int id);
     void updateElectronicLocker(ElectronicLocker el);

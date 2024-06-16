@@ -6,6 +6,7 @@ package com.nhom13.pojo;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,10 +38,10 @@ public class ResidentVisitor implements Serializable {
     @Column(name = "id")
     private Integer id;
     @JoinColumn(name = "resident_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Resident residentId;
     @JoinColumn(name = "visitor_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Visitor visitorId;
 
     public ResidentVisitor() {

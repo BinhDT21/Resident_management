@@ -20,6 +20,7 @@
         <c:url value="/surveys" var="surveys"/>
         <c:url value="/admin" var="admin"/>
         <c:url value="/logout" var="logout"/>
+        <c:url value="/visitor" var="visitor"/>
         <div class="collapse navbar-collapse" id="mynavbar">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="${index}">Resident management</a></li>
@@ -28,8 +29,9 @@
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Tiện ích</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="${index}">Quản lý cư dân</a></li>
+                        <li><a class="dropdown-item" href="${visitor}">Quản lý khách</a></li>
                         <li><a class="dropdown-item" href="<c:url value="/electronic-lockers"/>">Quản lý tủ đồ</a></li>
-                        <li><a class="dropdown-item" href="<c:url value='/invoice-residents'/>">Hóa đơn</a></li>
+                        <li><a class="dropdown-item" href="<c:url value='/invoice-residents'/>">Quản lý hóa đơn</a></li>
                         <li><a class="dropdown-item" href="${feedbacks}">Quản lý phản hồi</a></li>
                         <li><a class="dropdown-item" href="${surveys}">Quản lý khảo sát</a></li>
                     </ul>

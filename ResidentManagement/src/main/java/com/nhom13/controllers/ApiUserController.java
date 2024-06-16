@@ -70,14 +70,11 @@ public class ApiUserController {
     @ResponseStatus(HttpStatus.OK)
     public void update (@RequestParam Map<String, String> params, @RequestPart MultipartFile[] file){
         User u = this.userService.getUserByUsername(params.get("username"));
-//        User u = new User();
-//        u.setId(Integer.parseInt(params.get("id")));
         String password = params.get("password");
         u.setPassword(this.passwordEncoder.encode(password));
         if (file.length > 0)
             u.setFile(file[0]);
        
-        
         
         this.userService.updateUser(u);
     }

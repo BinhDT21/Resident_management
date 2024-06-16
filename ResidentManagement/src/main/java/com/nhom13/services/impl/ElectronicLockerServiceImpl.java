@@ -35,7 +35,7 @@ public class ElectronicLockerServiceImpl implements ElectronicLockerService {
     }
 
     @Override
-    public List<ElectronicLocker> getAllElectronicLockers(Map<String, String> params) {
+    public List<Object[]> getAllElectronicLockers(Map<String, String> params) {
         return electronicLockerRepository.getAllElectronicLockers(params);
     }
 }
