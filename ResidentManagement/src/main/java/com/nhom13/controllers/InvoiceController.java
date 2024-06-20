@@ -9,10 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class InvoiceController {
@@ -63,6 +62,26 @@ public class InvoiceController {
         invoiceService.deleteInvoice(invoiceId);
         return "redirect:/invoice-residents/" + residentId + "/all";
     }
+
+    @GetMapping("/invoices/create-multiple")
+    public String createMultiple(Model model) {
+        List residents = residentService.getAll();
+        model.addAttribute("residents", residents);
+        model.addAttribute("invoice", new Invoice());
+        return "invoice-create-multiple";
+    }
+
+    @PostMapping("/invoices/create-multiple")
+    public String postCreateMultiple(@ModelAttribute Invoice invoice,
+                                    @RequestParam(name= "residents", required = false) List<Integer> residentIds) {
+        invoiceService.createMultiple(invoice, residentIds);
+        return "redirect:/invoice-residents";
+    }
+
+//    @PostMapping("invoices/create-multiple")
+//    public String createInvoices(@RequestParam("residentIds[]") List<Integer> residentIds) {
+//        List<Resident> residents = residentService.getUserById(residentIds)
+//    }
 
 
 //    @Autowired

@@ -4,21 +4,13 @@
  */
 package com.nhom13.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.enterprise.inject.Default;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -53,13 +45,13 @@ public class Feedback implements Serializable {
     private Short status;
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
     private Date createdDate;
     @JoinColumn(name = "resident_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Resident residentId;
 
-    public Feedback() {
-    }
+    public Feedback() {}
 
     public Feedback(Integer id) {
         this.id = id;
@@ -129,10 +121,8 @@ public class Feedback implements Serializable {
         }
         return true;
     }
-
     @Override
     public String toString() {
         return "com.nhom13.pojo.Feedback[ id=" + id + " ]";
     }
-    
 }

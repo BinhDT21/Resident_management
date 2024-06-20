@@ -21,6 +21,7 @@
 </head>
 <body>
 <h1 class="text-center text-dark mt-1">QUẢN LÝ HÓA ĐƠN</h1>
+<a class="btn btn-success" href="<c:url value="/invoices/create-multiple"/>">Tạo hóa đơn hàng loạt</a>
 <table class="table">
     <thead>
     <tr>

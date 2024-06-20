@@ -1,0 +1,20 @@
+/* Common.css */
+.odd-item {
+    background-color: #f8f9fa; /* Màu nền cho mục lẻ */
+    margin: 5px;
+    border-radius: 6px;
+}
+
+.even-item {
+    background-color: #e9ecef; /* Màu nền cho mục chẵn */
+    margin: 5px;
+    border-radius: 6px;
+}
+
+.text-center {
+    text-align: center; /* Căn giữa văn bản */
+}
+
+.invoice-details{
+    text-align: justify;
+}

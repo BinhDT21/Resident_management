@@ -23,14 +23,18 @@ public class ResidentServiceImpl implements ResidentService{
     
     @Autowired
     private ResidentRepository resRepo;
-  
+
 
     @Override
     public List<Resident> loadResident(Map<String, String> params) {
         return this.resRepo.loadResident(params);
     }
 
-    
+    @Override
+    public List<Resident> getByIds(List<Integer> ids) {
+        return this.resRepo.getByIds(ids);
+    }
+
 
     @Override
     public User getUserById(int id) {
@@ -40,6 +44,11 @@ public class ResidentServiceImpl implements ResidentService{
     @Override
     public void deleteUser(int id) {
         this.resRepo.deleteUser(id);
+    }
+
+    @Override
+    public List<Resident> getAll() {
+        return resRepo.getAll();
     }
 
 }

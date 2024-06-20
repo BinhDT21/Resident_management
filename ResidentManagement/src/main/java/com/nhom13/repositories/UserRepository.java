@@ -17,4 +17,7 @@ public interface UserRepository {
     Admin getAdminByUsername (String username);
     User getUserByUsername (String username); 
     boolean authUser (String username, String password);
+
+    //confirm
+    void updateUser (User u);
 }

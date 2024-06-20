@@ -9,8 +9,10 @@ import com.nhom13.pojo.Resident;
 import com.nhom13.pojo.User;
 import com.nhom13.repositories.FeedbackRepository;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.Id;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -34,17 +36,22 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
     private LocalSessionFactoryBean factory;
 
     @Override
-    public List<Feedback> loadFeedbacks(Map<String, String> params) {
+    public List<Object[]> loadFeedbacks(Map<String, String> params) {
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<Object[]> query = b.createQuery(Object[].class);
 
-        Root rU = query.from(User.class);
-        Root rR = query.from(Resident.class);
-        Root rF = query.from(Feedback.class);
+        Root<User> rU = query.from(User.class);
+        Root<Resident> rR = query.from(Resident.class);
+        Root<Feedback> rF = query.from(Feedback.class);
 
-        query.multiselect(rF.get("id"), rF.get("content"), rU.get("firstName"),
-                rU.get("lastName"), rF.get("status"), rF.get("createdDate"));
+        query.multiselect(
+                rF.get("id"),
+                rF.get("content"),
+                rU.get("firstName"),
+                rU.get("lastName"),
+                rF.get("status"),
+                rF.get("createdDate"));
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -71,14 +78,58 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
         Feedback f = s.get(Feedback.class, id);
         return f;
     }
-    
+
+    //lấy id resident từ id user
+    public int getIdResident(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Resident> q = b.createQuery(Resident.class);
+
+        Root rR = q.from(Resident.class);
+
+        q.select(rR);
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(rR.get("userId"), id));
+
+        q.where(predicates.toArray(Predicate[]::new));
+
+        Query query = s.createQuery(q);
+
+        Resident r = (Resident) query.getSingleResult();
+        return r.getId();
+    }
+
+//    @Override
+//    public void creatFeedback(Feedback f, int userId) {
+//        Session s = this.factory.getObject().getCurrentSession();
+//        Resident r = s.createQuery("SELECT r FROM Resident r WHERE r.userId.id = :uid", Resident.class)
+//                .setParameter("uid", userId).getSingleResult();
+//
+//        Date currentDate = new Date();
+//        f.setCreatedDate(currentDate);
+//        f.setStatus(Short.parseShort("0"));
+//        f.setResidentId(r);
+//        s.save(f);
+//    }
+
+    @Override
+    public void creatFeedback(Feedback f, int userId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Resident r = s.get(Resident.class, this.getIdResident(userId));
+
+        Date currentDate = new Date();
+        f.setCreatedDate(currentDate);
+        f.setStatus(Short.parseShort("0"));
+        f.setResidentId(r);
+        s.save(f);
+    }
+
     @Override
     public void solveFeedback(int id) {
 
         Feedback f = this.getFeedbackById(id);
         f.setStatus(Short.parseShort("1"));
     }
-
-    
 
 }

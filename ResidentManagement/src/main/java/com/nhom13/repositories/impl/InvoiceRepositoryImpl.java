@@ -1,5 +1,6 @@
 package com.nhom13.repositories.impl;
 
+import com.nhom13.DTOs.InvoiceDTO;
 import com.nhom13.pojo.Invoice;
 import com.nhom13.pojo.Resident;
 import com.nhom13.pojo.User;
@@ -15,8 +16,6 @@ import javax.persistence.Query;
 import javax.persistence.criteria.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
@@ -68,17 +67,14 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     //Paid admin đã xác nhận
     @Override
     public void createOrUpdateInvoice(Invoice invoice) {
+        Date currentDate = new Date();
         Session s = this.factory.getObject().getCurrentSession();
-//        LocalDate dueDate = invoice.getDueDate();
-//        LocalDate atNow = LocalDate.now();
-
-//        long dayisDifference = ChronoUnit.DAYS.between(atNow, dueDate);
         if(invoice.getId() == null) {
             invoice.setStatus("unpaid");
+            invoice.setCreatedDate(currentDate);
             s.save(invoice);
         } else
             s.update(invoice);
-
     }
 
     @Override
@@ -91,5 +87,78 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         Session s = factory.getObject().getCurrentSession();
         return s.createQuery("SELECT i FROM Invoice i WHERE i.residentId.id = :residentId", Invoice.class)
                 .setParameter("residentId", residentId).getResultList();
+    }
+
+    @Override
+    public void createInvoices(List<Resident> residents) {
+        Session s = factory.getObject().getCurrentSession();
+
+        for (Resident r : residents) {
+            Invoice invoice = new Invoice();
+            invoice.setResidentId(r);
+            invoice.setStatus("unpaid");
+            s.save(invoice);
+
+        }
+    }
+
+    @Override
+    public void createMultiple(List<Invoice> invoices) {
+        Session s = factory.getObject().getCurrentSession();
+        invoices.forEach(i -> s.save(i));
+    }
+
+    @Override
+    public List<Object[]> getInvoice(Map<String, String> params) {
+        Session session = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> query = b.createQuery(Object[].class);
+
+        Root<Invoice> rI = query.from(Invoice.class);
+        Root<Resident> rR = query.from(Resident.class);
+        Root<User> rU = query.from(User.class);
+
+        query.multiselect(
+                rI.get("id"),
+                rI.get("name"),
+                rI.get("amount"),
+                rI.get("dueDate"),
+                rI.get("status"),
+                rI.get("paymentProve"),
+                rU.get("lastName"),  // Fetch last name from Resident
+                rU.get("firstName"), // Fetch first name from Resident
+                rI.get("createdDate")  // Updated to match Java camelCase convention
+        );
+
+        List<Predicate> predicates = new ArrayList<>();
+        // Lấy và xử lý các tham số từ params
+        String kw = params.getOrDefault("kw", "");
+        String status = params.get("status");
+        String isActive = params.get("active");
+
+        // Thêm điều kiện cho từ khóa tìm kiếm (kw)
+        if (kw != null && !kw.isEmpty()) {
+            predicates.add(b.like(rI.get("name"), String.format("%%%s%%", kw)));
+        }
+
+        // Thêm điều kiện cho status
+        if (status != null && !status.isEmpty()) {
+            predicates.add(b.equal(rI.get("status"), Integer.parseInt(status)));
+        }
+
+        // Thêm điều kiện cho active
+        if (isActive != null && !isActive.isEmpty()) {
+            predicates.add(b.equal(rI.get("active"), Boolean.parseBoolean(isActive)));
+        }
+
+        // Thêm điều kiện join với bảng Resident
+        predicates.add(b.equal(rI.get("residentId"), rR.get("id")));
+
+        query.where(predicates.toArray(Predicate[]::new));
+        query.orderBy(b.desc(rI.get("createdDate")));
+
+
+        Query q = session.createQuery(query);
+        return q.getResultList();
     }
 }

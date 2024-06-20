@@ -79,5 +79,10 @@
         <put-attribute name="title" value="Thêm quản trị viên" />
         <put-attribute name="content" value="/WEB-INF/pages/admin.jsp" />
     </definition>
+
+    <definition name="invoice-create-multiple" extends="baseLayout">
+        <put-attribute name="title" value="" />
+        <put-attribute name="content" value="/WEB-INF/pages/invoice-create-multiple.jsp" />
+    </definition>
     
 </tiles-definitions>

@@ -9,6 +9,9 @@ import com.nhom13.repositories.FeedbackRepository;
 import com.nhom13.services.FeedbackService;
 import java.util.List;
 import java.util.Map;
+
+import com.nhom13.services.UserService;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +24,11 @@ public class FeedbackServiceImpl implements FeedbackService{
     
     @Autowired
     private FeedbackRepository feedbackRepo;
+    @Autowired
+    private UserService userService;
 
     @Override
-    public List<Feedback> loadFeedbacks(Map<String, String> params) {
+    public List<Object[]> loadFeedbacks(Map<String, String> params) {
         return this.feedbackRepo.loadFeedbacks(params);
     }
 
@@ -36,5 +41,10 @@ public class FeedbackServiceImpl implements FeedbackService{
     public Feedback getFeedbackById(int id) {
         return this.feedbackRepo.getFeedbackById(id);
     }
-    
+
+    @Override
+    public void createFeedback(Feedback feedback) {
+        int userId = userService.getCurrentUser().getId();
+        this.feedbackRepo.creatFeedback(feedback, userId);
+    }
 }

@@ -109,4 +109,13 @@ public class UserRepositoryImpl implements UserRepository {
         
         return this.passwordEncoder.matches(password, u.getPassword());
     }
+
+    @Override
+    public void updateUser(User u) {
+        Session s = this.factory.getObject().getCurrentSession();
+        User user = s.get(User.class, u.getId());
+        user.setPassword(u.getPassword());
+        user.setAvatar(u.getAvatar());
+        s.save(user);
+    }
 }

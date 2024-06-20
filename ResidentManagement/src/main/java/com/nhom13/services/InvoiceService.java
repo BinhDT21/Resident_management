@@ -1,5 +1,6 @@
 package com.nhom13.services;
 
+import com.nhom13.DTOs.InvoiceDTO;
 import com.nhom13.pojo.Invoice;
 import com.nhom13.pojo.Resident;
 
@@ -12,4 +13,7 @@ public interface InvoiceService {
     void deleteInvoice (int id);
     Invoice getInvoiceById (int id);
     List<Invoice> getByResidentId(int residentId);
+    public void createInvoices(List<Resident> residents);
+    void createMultiple(Invoice invoice, List<Integer> residentIds);
+    List<Object[]> getInvoice(Map<String, String> params);
 }

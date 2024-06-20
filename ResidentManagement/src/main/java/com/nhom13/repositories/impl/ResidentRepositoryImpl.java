@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
 
@@ -32,6 +33,8 @@ public class ResidentRepositoryImpl implements ResidentRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
+
+    private EntityManager em;
 
     @Override
     public List<Resident> loadResident(Map<String, String> params) {
@@ -68,7 +71,12 @@ public class ResidentRepositoryImpl implements ResidentRepository {
         return q.getResultList();
     }
 
-    
+    @Override
+    public List<Resident> getByIds(List<Integer> ids) {
+        String query = "select r from Resident r where r.id in (:ids)";
+        return em.createQuery(query, Resident.class).setParameter("ids", ids).getResultList();
+    }
+
 
     @Override
     public User getUserById(int id) {
@@ -81,5 +89,11 @@ public class ResidentRepositoryImpl implements ResidentRepository {
     public void deleteUser(int id) {
         User u = this.getUserById(id);
         u.setActive(Short.parseShort("0"));
+    }
+
+    @Override
+    public List<Resident> getAll() {
+        Session s = factory.getObject().getCurrentSession();
+        return s.createQuery("SELECT r FROM Resident r", Resident.class).getResultList();
     }
 }

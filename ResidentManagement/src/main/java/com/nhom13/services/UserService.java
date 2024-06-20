@@ -18,4 +18,7 @@ public interface UserService  extends  UserDetailsService{
     User getUserByUsername (String username); 
     Admin getAdminByUsername (String username);
     boolean authUser (String username, String password);
+    User getCurrentUser();
+    //confirm => thay doi mk va update avatar
+    void updateUser (User u);
 }
