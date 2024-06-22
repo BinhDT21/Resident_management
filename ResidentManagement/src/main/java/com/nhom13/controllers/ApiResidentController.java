@@ -4,6 +4,7 @@
  */
 package com.nhom13.controllers;
 
+import com.nhom13.services.NotificationService;
 import com.nhom13.services.ResidentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,9 +26,12 @@ public class ApiResidentController {
     @Autowired
     private ResidentService resSer;
     
+    @Autowired
+    private NotificationService notSer;
+    
     @DeleteMapping("/resident/{residentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable(value = "residentId") int id) {
-        this.resSer.deleteUser(id);
+        this.resSer.deleteUser(id);        
     }
 }

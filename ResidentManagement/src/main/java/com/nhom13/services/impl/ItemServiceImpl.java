@@ -3,6 +3,7 @@ package com.nhom13.services.impl;
 import com.nhom13.pojo.Item;
 import com.nhom13.repositories.ItemRepository;
 import com.nhom13.services.ItemService;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void updatOrCreateItem(Item item) {
+        item.setCreatedDate(new Date());
         itemRepository.updateOrCreateItem(item);
     }
 

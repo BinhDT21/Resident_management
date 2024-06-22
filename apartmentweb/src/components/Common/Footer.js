@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast"
 
 export const Footer = () => {
     const styles = {
@@ -12,7 +13,9 @@ export const Footer = () => {
 
     return (
         <>
+
             <div style={styles.footer_block}>
+                
                 <h4 style={styles.txt}>BK Apartment &copy; 2024</h4>
                 <p style={styles.txt}>Thông tin liên hệ: 2151013009binh@ou.edu.vn</p>
                 <p style={styles.txt}>Hotline: 0707.xxx.xxx</p>

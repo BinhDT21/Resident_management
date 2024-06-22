@@ -54,7 +54,7 @@
 
             <td>
                 <c:url value="/survey_detail/${s.id}" var="detail"/>
-                <a class="btn btn-success" href="${detail}">Xem chi tiết</a>
+                <a class="btn btn-success" href="${detail}">Xem thống kê</a>
                 
                 
                 <c:if test="${s.active==1}">

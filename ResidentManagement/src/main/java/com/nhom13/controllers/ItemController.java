@@ -2,8 +2,12 @@ package com.nhom13.controllers;
 
 import com.nhom13.pojo.ElectronicLocker;
 import com.nhom13.pojo.Item;
+import com.nhom13.pojo.Resident;
+import com.nhom13.pojo.User;
 import com.nhom13.services.ElectronicLockerService;
 import com.nhom13.services.ItemService;
+import com.nhom13.services.NotificationService;
+import com.nhom13.services.ResidentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +19,13 @@ import java.util.Map;
 public class ItemController {
     @Autowired
     private ItemService itemService;
-
     @Autowired
     private ElectronicLockerService electronicLockerService;
+    @Autowired
+    private NotificationService notService;
+    @Autowired
+    private ResidentService resService;
+    
 
     @GetMapping("/electronic-lockers/{elId}/items")
     public String getAllItemByElId(@PathVariable int elId,
@@ -52,6 +60,18 @@ public class ItemController {
     @PostMapping("/electronic-lockers/{elId}/items")
     public String create(@ModelAttribute Item item, Model model) {
         itemService.updatOrCreateItem(item);
+        
+        int lockerId = item.getElectronicLockerId().getId();
+        ElectronicLocker l = this.electronicLockerService.getElectronicLockerById(lockerId);
+        Resident r = this.resService.getResidentById(l.getResidentId().getId());
+        User u = this.resService.getUserById(r.getUserId().getId());
+        String token = u.getNotificationToken();
+        String title = "Thông báo";
+        String body = "Bạn vừa được nhận hàng";
+
+        if (token != null && !token.isEmpty()) {
+            this.notService.sendNotification(token, title, body);
+        }
         return "redirect:/electronic-lockers/"+ item.getElectronicLockerId().getId() +"/items";
     }
 }

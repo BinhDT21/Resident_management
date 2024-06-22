@@ -106,6 +106,9 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     @JsonIgnore
     private Set<Resident> residentSet;
+    @Size(max = 255)
+    @Column(name = "notification_token")
+    private String notificationToken;
     
     @Transient
     private MultipartFile file;
@@ -282,6 +285,20 @@ public class User implements Serializable {
      */
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    /**
+     * @return the notificationToken
+     */
+    public String getNotificationToken() {
+        return notificationToken;
+    }
+
+    /**
+     * @param notificationToken the notificationToken to set
+     */
+    public void setNotificationToken(String notificationToken) {
+        this.notificationToken = notificationToken;
     }
     
 }

@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { UserContext } from "../../configs/Contexts";
 import { Navigate } from "react-router-dom";
 import { Footer } from "../Common/Footer";
+import { Toaster } from "react-hot-toast";
 
 
 const Home = () => {
@@ -19,7 +20,7 @@ const Home = () => {
 
     return (
         <>
-
+            
             <Header />
             <Slide />
             <Footer/>

@@ -38,4 +38,9 @@ public class ElectronicLockerServiceImpl implements ElectronicLockerService {
     public List<Object[]> getAllElectronicLockers(Map<String, String> params) {
         return electronicLockerRepository.getAllElectronicLockers(params);
     }
+
+    @Override
+    public ElectronicLocker getLockerByResidentId(int residentId) {
+        return this.electronicLockerRepository.getLockerByResidentId(residentId);
+    }
 }

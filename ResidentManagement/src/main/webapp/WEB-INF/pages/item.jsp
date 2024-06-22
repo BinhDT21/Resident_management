@@ -30,8 +30,9 @@
 
     <tr>
         <th>ID</th>
+        <th>Mô tả hàng</th>
         <th>Trạng thái</th>
-        <th>Mô tả</th>
+        <th>Ngày nhận</th>
         <th></th>
     </tr>
 
@@ -39,6 +40,7 @@
     <c:forEach items="${items}" var="item">
         <tr>
             <td>${item.id}</td>
+            <td>${item.description}</td>
             <c:choose>
                 <c:when test="${item.status == 0}">
                     <td class="text-danger">Chưa nhận</td>
@@ -47,14 +49,14 @@
                     <td class="text-success">Đã nhận</td>
                 </c:otherwise>
             </c:choose>
-            <td>${item.description}</td>
+            <td class="createdDate" data-date="${item.createdDate}"></td>
             <td>
                 <a class="btn btn-primary"
                    href="<c:url value="/electronic-lockers/${elId}/items/${item.id}"/>">
                     Chi tiết
                 </a>
 
-                   <button class="btn btn-danger" onclick="deleteItem('<c:url value="/api/item/${item.id}/"/>')">Xóa hàng</button>
+                <button class="btn btn-danger" onclick="deleteItem('<c:url value="/api/item/${item.id}/"/>')">Xóa hàng</button>
             </td>
         </tr>
     </c:forEach>
@@ -64,3 +66,30 @@
 <a class="btn btn-primary" href="<c:url value='/electronic-lockers/${elId}/items/create'/>">Tạo mới</a>
 
 <script src="<c:url value="/js/script.js" />"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy tất cả các phần tử có class "createdDate"
+        const dateElements1 = document.querySelectorAll('.createdDate');
+        
+        dateElements1.forEach(function (element) {
+            // Lấy dữ liệu ngày từ thuộc tính data-date
+            const originalDate = element.getAttribute('data-date');
+
+            // Chuyển đổi dữ liệu ngày thành đối tượng Date
+            const date = new Date(originalDate);
+
+            // Định dạng lại ngày theo ý muốn, ví dụ: "dd/mm/yyyy hh:mm:ss"
+            const formattedDate = date.toLocaleString('vi-VN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+
+            // Hiển thị ngày đã định dạng lên trang HTML
+            element.textContent = formattedDate;
+        });
+        
+        
+    });
+</script>

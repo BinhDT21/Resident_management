@@ -4,6 +4,7 @@
  */
 package com.nhom13.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -41,9 +42,11 @@ public class ElectronicLocker implements Serializable {
     @Column(name = "id")
     private Integer id;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "electronicLockerId")
+    @JsonIgnore
     private Set<Item> itemSet;
     @JoinColumn(name = "resident_id", referencedColumnName = "id")
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @JsonIgnore
     private Resident residentId;
 
     public ElectronicLocker() {
@@ -102,5 +105,5 @@ public class ElectronicLocker implements Serializable {
     public String toString() {
         return "com.nhom13.pojo.ElectronicLocker[ id=" + id + " ]";
     }
-    
+
 }

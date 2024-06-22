@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { DispatchContext, UserContext } from "../../configs/Contexts";
 import APIs, { authApi, endpoints } from "../../configs/APIs";
 import cookie from "react-cookies";
+import { generateToken } from "../Firebase/firebase";
 
 
 const Login = () => {
@@ -30,6 +31,7 @@ const Login = () => {
     const dispatch = useContext(DispatchContext)
     const currentUser = useContext(UserContext)
     const nav = useNavigate();
+    const [fcmToken, setFcmToken] = useState ("")
 
 
     const change = (event, field) => {
@@ -38,23 +40,51 @@ const Login = () => {
         })
     }
 
+    const getToken = async (username) => {
+        const token = await generateToken()
+        
+        try {
+            if(token !== "" && token !== null){
+                const res = await authApi().post(endpoints['update-token'],{
+                    "username":username,
+                    "token":token
+                })
+            }
+        }catch(ex){
+            console.log("Lỗi update notification token khi gọi api update token")
+        }
+    }
 
     const login = async (e) => {
         e.preventDefault()
+
+
+
         try {
             let res = await APIs.post(endpoints['login'], { ...user });
             cookie.save("token", res.data);
 
             setTimeout(async () => {
                 let u = await authApi().get(endpoints['current-user'])
-                console.info(u.data)
-                dispatch({
-                    "type": "login",
-                    "payload": u.data
-                })
+                console.info("56",u.data)
+                if(u.data.active===0){
+                    alert("Tài khoảng của bạn đã bị khóa")
+                    nav("/login")
+                }else{
+                    dispatch({
+                        "type": "login",
+                        "payload": u.data
+                    })
+                }
+                
+                await getToken(u.data.username)
             }, 100)
+
             nav("/")
+            
+            
         } catch (ex) {
+            alert("Tên đăng nhập hoặc mật khẩu sai")
             console.error(ex)
         }
     }

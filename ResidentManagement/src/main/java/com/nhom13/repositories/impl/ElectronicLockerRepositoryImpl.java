@@ -6,7 +6,6 @@ import com.nhom13.pojo.Resident;
 import com.nhom13.pojo.User;
 import com.nhom13.repositories.ElectronicLockerRepository;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import javax.persistence.Query;
 
 @Repository
 @Transactional
@@ -86,6 +86,18 @@ public class ElectronicLockerRepositoryImpl implements ElectronicLockerRepositor
         if (el != null) {
             s.delete(el);
         }
+    }
+
+    @Override
+    public ElectronicLocker getLockerByResidentId(int residentId) {
+        Session s = this.factoryBean.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<ElectronicLocker> q = b.createQuery(ElectronicLocker.class);
+        Root r = q.from(ElectronicLocker.class);
+        q.select(r);
+        q.where(b.equal(r.get("residentId"), residentId));
+        Query query = s.createQuery(q);
+        return (ElectronicLocker)query.getSingleResult();
     }
 
 
