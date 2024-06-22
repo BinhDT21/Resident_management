@@ -45,6 +45,7 @@ public class ApiUserController {
     @PostMapping("/login/")
     public ResponseEntity<String> login (@RequestBody User user){
         if (this.userService.authUser(user.getUsername(), user.getPassword())==true){
+//            this.userService.updateToken(user);
             String token = this.jwtService.generateTokenLogin(user.getUsername());
             return new ResponseEntity<>(token, HttpStatus.OK);
         }
@@ -59,8 +60,6 @@ public class ApiUserController {
     } 
     
     
-    
-   
     
     //update avt and password
     @PostMapping(path = "/update-user/", consumes = {
@@ -77,5 +76,18 @@ public class ApiUserController {
        
         
         this.userService.updateUser(u);
+    }
+    
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(path = "/update-token/", consumes = {
+        MediaType.APPLICATION_JSON_VALUE,
+        MediaType.MULTIPART_FORM_DATA_VALUE
+    })
+    public void updateToken (@RequestBody Map<String, String> params){
+        User u = this.userService.getUserByUsername(params.get("username"));
+        String token = params.get("token");
+        u.setNotificationToken(token);
+        
+        this.userService.updateToken(u);
     }
 }

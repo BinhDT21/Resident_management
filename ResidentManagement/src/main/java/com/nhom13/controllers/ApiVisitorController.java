@@ -37,13 +37,13 @@ public class ApiVisitorController {
     @Autowired
     private VisitorService visitorService;
 
-    @DeleteMapping("/visitor/{visitorId}")
+    @DeleteMapping("/visitor/{visitorId}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteVisitor(@PathVariable(value = "visitorId") int id) {
         this.visitorService.deleteVisitor(id);
     }
 
-    @GetMapping(path = "/visitor/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/visitor/{userId}/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<VisitorDTO>> getVisitorByResidentId(@PathVariable(value = "userId") int id) {
 
         List<Object[]> listVisitors = this.visitorService.loadVisitorsByResidentId(id);

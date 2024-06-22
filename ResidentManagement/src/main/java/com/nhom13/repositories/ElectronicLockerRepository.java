@@ -12,5 +12,6 @@ public interface ElectronicLockerRepository {
     ElectronicLocker getElectronicLockerById(int id);
     void updateElectronicLocker(ElectronicLocker el);
     void deleteElectronicLocker(int id);
+    ElectronicLocker getLockerByResidentId (int residentId);
 }
 

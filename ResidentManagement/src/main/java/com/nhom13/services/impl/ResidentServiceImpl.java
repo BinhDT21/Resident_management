@@ -42,4 +42,14 @@ public class ResidentServiceImpl implements ResidentService{
         this.resRepo.deleteUser(id);
     }
 
+    @Override
+    public Resident getResidentByUserId(int userId) {
+        return this.resRepo.getResidentByUserId(userId);
+    }
+
+    @Override
+    public Resident getResidentById(int id) {
+        return this.resRepo.getResidentById(id);
+    }
+
 }

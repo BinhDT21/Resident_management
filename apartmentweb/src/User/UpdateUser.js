@@ -40,7 +40,6 @@ const UpdateUser = () => {
     const update_user = async (e) => {
         e.preventDefault()
 
-        // alert(user.password)
         if (user.password !== user.confirm) {
             alert("Xác nhận mật khẩu sai !")
             return nav("/update")

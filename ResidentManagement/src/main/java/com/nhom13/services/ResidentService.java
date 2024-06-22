@@ -17,7 +17,8 @@ import java.util.Map;
  */
 public interface ResidentService {
     List<Resident> loadResident (Map<String, String> params);
-    
-    User getUserById (int id);  //lay user theo id
+    User getUserById (int id);  //lấy user từ userId
     void deleteUser(int id);    //deactive user
+    Resident getResidentByUserId (int userId);
+    Resident getResidentById (int id);
 }

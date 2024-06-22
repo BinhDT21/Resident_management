@@ -17,4 +17,6 @@ public interface ResidentRepository {
     List<Resident> loadResident (Map<String, String> params);
     User getUserById (int id);  //lay user theo id
     void deleteUser(int id);    //deactive user
+    Resident getResidentByUserId (int userId);
+    Resident getResidentById (int id);
 }

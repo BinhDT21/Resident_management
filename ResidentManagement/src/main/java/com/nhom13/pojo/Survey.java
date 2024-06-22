@@ -4,6 +4,8 @@
  */
 package com.nhom13.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -54,11 +56,14 @@ public class Survey implements Serializable {
     private String title;
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
     private Date createdDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "surveyId")
+    @JsonIgnore
     private Set<Question> questionSet;
     @JoinColumn(name = "admin_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
+    @JsonIgnore
     private Admin adminId;
     @Column(name = "active")
     private Short active;

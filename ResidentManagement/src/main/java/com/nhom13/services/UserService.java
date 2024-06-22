@@ -20,4 +20,5 @@ public interface UserService  extends  UserDetailsService{
     boolean authUser (String username, String password);
     //confirm => thay doi mk va update avatar
     void updateUser(User u);
+    void updateToken(User u);
 }

@@ -11,5 +11,5 @@ public interface ElectronicLockerService {
     void deleteElectronicLocker(int id);
     void addElectronicLocker(ElectronicLocker el);
     List<Object[]> getAllElectronicLockers(Map<String, String> params);
-
+    ElectronicLocker getLockerByResidentId (int residentId);
 }

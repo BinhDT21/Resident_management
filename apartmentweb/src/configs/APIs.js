@@ -10,7 +10,12 @@ export const endpoints = {
     'update-user':"/api/update-user/",
     'visitor':(residentId) => `/api/visitor/${residentId}/`,
     'create-visitor':"/api/visitor/",
-    'delete-visitor':(visitorId) => `/api/visitor/${visitorId}/`
+    'delete-visitor':(visitorId) => `/api/visitor/${visitorId}/`,
+    'items':(userId) => `/api/item/${userId}/`,
+    'update-token': "/api/update-token/",
+    'surveys':"/api/surveys/",
+    'surveys-detail':(surveyId) => `/api/surveys/${surveyId}/`,
+    'surveys-answers':(surveyId) => `/api/surveys/${surveyId}/`,
 }
 
 export const authApi =() => {

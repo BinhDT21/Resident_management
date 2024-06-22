@@ -94,4 +94,9 @@ public class UserServiceImpl implements UserService {
         this.userRepo.updateUser(u);
     }
 
+    @Override
+    public void updateToken(User u) {
+        this.userRepo.updateToken(u);
+    }
+
 }

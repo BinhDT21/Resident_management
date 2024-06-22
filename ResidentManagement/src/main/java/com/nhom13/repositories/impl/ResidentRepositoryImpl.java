@@ -82,4 +82,25 @@ public class ResidentRepositoryImpl implements ResidentRepository {
         User u = this.getUserById(id);
         u.setActive(Short.parseShort("0"));
     }
+
+    @Override
+    public Resident getResidentByUserId(int userId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Resident> q = b.createQuery(Resident.class);
+        Root r = q.from(Resident.class);
+        q.select(r);
+        
+        q.where(b.equal(r.get("userId"), userId));
+        
+        Query query = s.createQuery(q);
+        return (Resident)query.getSingleResult();
+    }
+
+    @Override
+    public Resident getResidentById(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Resident r = s.get(Resident.class, id);
+        return r;
+    }
 }

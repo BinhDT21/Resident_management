@@ -118,4 +118,12 @@ public class UserRepositoryImpl implements UserRepository {
         user.setAvatar(u.getAvatar());
         s.save(user);
     }
+
+    @Override
+    public void updateToken(User u) {
+        Session s = this.factory.getObject().getCurrentSession();
+        User user = s.get(User.class,u.getId());
+        user.setNotificationToken(u.getNotificationToken());
+        s.save(user);
+    }
 }

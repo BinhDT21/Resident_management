@@ -4,6 +4,7 @@
  */
 package com.nhom13.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.*;
@@ -33,14 +34,19 @@ public class Resident implements Serializable {
     @Column(name = "balance")
     private Long balance;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "residentId")
+    @JsonIgnore
     private Set<Feedback> feedbackSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "residentId")
+    @JsonIgnore
     private Set<Answer> answerSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "residentId")
+    @JsonIgnore
     private Set<ElectronicLocker> electronicLockerSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "residentId")
+    @JsonIgnore
     private Set<ResidentVisitor> residentVisitorSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "residentId")
+    @JsonIgnore
     private Set<Invoice> invoiceSet;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
