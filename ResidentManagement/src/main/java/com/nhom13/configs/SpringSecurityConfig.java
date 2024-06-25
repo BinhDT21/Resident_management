@@ -66,9 +66,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/surveys").access("hasAuthority('admin')")
                 .antMatchers("/add_survey").access("hasAuthority('admin')")
                 .antMatchers("/survey_detail").access("hasAuthority('admin')")
+                .antMatchers("/visitor").access("hasAuthority('admin')")
+                .antMatchers("/electronic-lockers").access("hasAuthority('admin')")
+                .antMatchers("/electronic-lockers/**").access("hasAuthority('admin')")
+                .antMatchers("/invoice-residents").access("hasAuthority('admin')")
                 .antMatchers("/login").permitAll()
-                .antMatchers("/logout").permitAll().and()
-                .authorizeRequests().antMatchers("https://test-payment.momo.vn/v2/gateway/api/**").permitAll().anyRequest().authenticated();
+                .antMatchers("/logout").permitAll();
+
         http.csrf().disable();
     }
 
