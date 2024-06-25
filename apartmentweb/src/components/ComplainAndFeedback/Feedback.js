@@ -87,7 +87,7 @@ const Feedback = () => {
                         style={{ backgroundColor: entry.status === 0 ? "red" : "green" }}
                     >
                         <div>
-                            <h5>{entry.lastName} {entry.firstName}</h5>
+                            <h5>{entry.lastName} {entry.firstName} - {entry.status}</h5>
                             <p>{entry.content}</p>
                             <h6 className="entry-created">{entry.createdDate}</h6>
                         </div>
