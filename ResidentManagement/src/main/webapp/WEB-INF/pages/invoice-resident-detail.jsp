@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <style>
     .table td, .table th{
         text-align: center;
@@ -37,7 +39,7 @@
         <tr>
             <td>${i.name}</td>
             <td>${i.amount}</td>
-            <td>${i.dueDate}</td>
+            <td><fmt:formatDate value="${i.dueDate}" pattern="dd-MM-yyyy" /></td>
             <td>${i.status}</td>
             <td>
                 <a class="btn btn-primary"
@@ -49,5 +51,22 @@
     </c:forEach>
     </tbody>
 </table>
+
+<nav>
+    <ul class="pagination">
+        <c:if test="${currentPage > 1}">
+            <li class="page-item"><a class="page-link" href="?page=${currentPage - 1}">Previous</a></li>
+        </c:if>
+        <c:forEach var="i" begin="1" end="${totalPages}">
+            <li class="page-item <c:if test='${i == currentPage}'>active</c:if>'">
+                <a class="page-link" href="?page=${i}">${i}</a>
+            </li>
+        </c:forEach>
+        <c:if test="${currentPage < totalPages}">
+            <li class="page-item"><a class="page-link" href="?page=${currentPage + 1}">Next</a></li>
+        </c:if>
+    </ul>
+</nav>
+
 </body>
 </html>

@@ -5,7 +5,6 @@
 package com.nhom13.pojo;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -59,7 +58,7 @@ public class Invoice implements Serializable {
     private long amount;
     @Column(name = "due_date")
 //    @Temporal(TemporalType.DATE)
-    private LocalDate dueDate;
+    private Date dueDate;
     @Size(max = 45)
     @Column(name = "status")
     private String status;
@@ -111,11 +110,11 @@ public class Invoice implements Serializable {
         this.amount = amount;
     }
 
-    public LocalDate getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDate dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 

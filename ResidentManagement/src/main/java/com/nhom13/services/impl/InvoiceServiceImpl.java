@@ -1,6 +1,8 @@
 package com.nhom13.services.impl;
 
 import com.nhom13.DTOs.InvoiceDTO;
+import com.nhom13.DTOs.PaymentRequest;
+import com.nhom13.configs.MoMoConfig;
 import com.nhom13.pojo.Invoice;
 import com.nhom13.pojo.Resident;
 import com.nhom13.repositories.InvoiceRepository;
@@ -9,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Query;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +24,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     private InvoiceRepository invoiceRepository;
-
-    @Override
-    public List<Resident> getDetailInvoiceForResident(Map<String, String> params) {
-        return this.invoiceRepository.getDetailInvoiceForResident(params);
-    }
 
 
     @Override
@@ -67,5 +67,44 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<Object[]> getInvoice(Map<String, String> params) {
         return this.invoiceRepository.getInvoice(params);
+    }
+
+    @Override
+    public PaymentRequest getPaymentUrl(Integer invoiceId) {
+        Invoice invoice = invoiceRepository.getInvoiceById(invoiceId);
+        if (invoice == null || invoice.getStatus().equals("paid"))
+            return null;
+
+        String requestId = new Date().getTime() + "";
+        String orderId = new Date().getTime() + "";
+        String orderInfo = invoiceId.toString();
+        Long amount = invoice.getAmount();
+        String redirectUrl = "localhost:3000/payment-success/" + requestId;
+        String ipnUrl = "localhost:8080/ResidentManagement/payment-success/" + invoiceId;
+        String requestType = "captureWallet";
+        String extraData = "";
+        String lang = "vi";
+
+        String data = "accessKey" + MoMoConfig.accessKey
+                + "&amount=" + amount
+                + "&extraData=" + extraData
+                + "&ipnUrl=" + ipnUrl
+                + "&orderId=" + orderId
+                + "&orderInfo=" + orderInfo
+                + "&partnerCode=" + MoMoConfig.partnerCode
+                + "&redirectUrl=" + redirectUrl
+                + "&requestId=" + requestId
+                + "&requestType=" + requestType;
+
+        try {
+            String signature = MoMoConfig.signHmacSHA256(data);
+            PaymentRequest paymentRequest = new PaymentRequest(MoMoConfig.partnerCode, requestType, orderId,
+                    orderInfo, amount,redirectUrl, ipnUrl,
+                    requestType, extraData, lang, signature);
+
+            return paymentRequest;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : header
     Created on : May 24, 2024, 5:11:07 PM
     Author     : ADMIN
@@ -16,6 +16,8 @@
         </a>
 
         <c:url value="/" var="index"/>
+        <c:url value='/electronic-lockers' var="lockers"/>
+        <c:url value='/invoice-residents' var="invoices"/>
         <c:url value="/feedbacks" var="feedbacks"/>
         <c:url value="/surveys" var="surveys"/>
         <c:url value="/admin" var="admin"/>
@@ -28,8 +30,8 @@
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Tiện ích</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="${index}">Quản lý cư dân</a></li>
-                        <li><a class="dropdown-item" href="<c:url value="/electronic-lockers"/>">Quản lý tủ đồ</a></li>
-                        <li><a class="dropdown-item" href="<c:url value='/invoice-residents'/>">Hóa đơn</a></li>
+                        <li><a class="dropdown-item" href="${lockers}">Quản lý tủ đồ</a></li>
+                        <li><a class="dropdown-item" href="${invoices}">Hóa đơn</a></li>
                         <li><a class="dropdown-item" href="${feedbacks}">Quản lý phản hồi</a></li>
                         <li><a class="dropdown-item" href="${surveys}">Quản lý khảo sát</a></li>
                     </ul>

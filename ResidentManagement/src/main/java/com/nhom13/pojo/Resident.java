@@ -46,37 +46,6 @@ public class Resident implements Serializable {
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User userId;
 
-    @Transient
-    private long unpaidInvoiceCount;
-    @Transient
-    private long waitingInvoiceCount;
-    @Transient
-    private long paidInvoiceCount;
-
-    public long getUnpaidInvoiceCount() {
-        return unpaidInvoiceCount;
-    }
-
-    public void setUnpaidInvoiceCount(long unpaidInvoiceCount) {
-        this.unpaidInvoiceCount = unpaidInvoiceCount;
-    }
-
-    public long getWaitingInvoiceCount() {
-        return waitingInvoiceCount;
-    }
-
-    public void setWaitingInvoiceCount(long waitingInvoiceCount) {
-        this.waitingInvoiceCount = waitingInvoiceCount;
-    }
-
-    public long getPaidInvoiceCount() {
-        return paidInvoiceCount;
-    }
-
-    public void setPaidInvoiceCount(long paidInvoiceCount) {
-        this.paidInvoiceCount = paidInvoiceCount;
-    }
-
     public Resident() {
     }
 

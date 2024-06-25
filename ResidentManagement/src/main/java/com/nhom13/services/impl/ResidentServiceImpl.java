@@ -24,6 +24,10 @@ public class ResidentServiceImpl implements ResidentService{
     @Autowired
     private ResidentRepository resRepo;
 
+    public List<Resident> getResidentWithInvoices(Map<String, String> params) {
+        return resRepo.getResidentWithInvoices(params);
+    }
+
 
     @Override
     public List<Resident> loadResident(Map<String, String> params) {

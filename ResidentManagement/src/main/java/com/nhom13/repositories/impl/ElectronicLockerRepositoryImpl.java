@@ -1,8 +1,8 @@
 package com.nhom13.repositories.impl;
 
 import com.nhom13.pojo.ElectronicLocker;
-import com.nhom13.pojo.Item;
 import com.nhom13.pojo.Resident;
+import com.nhom13.pojo.User;
 import com.nhom13.repositories.ElectronicLockerRepository;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -28,18 +28,33 @@ public class ElectronicLockerRepositoryImpl implements ElectronicLockerRepositor
     @Autowired
     private Environment env;
 
+    public long countElectronicLockers(Map<String, String> params) {
+        Session s = this.factoryBean.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Long> q = b.createQuery(Long.class);
+
+        Root<ElectronicLocker> rE = q.from(ElectronicLocker.class);
+        Root<Resident> rR = q.from(Resident.class);
+
+        q.select(b.count(rE));
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(rR.get("id"), rE.get("residentId")));
+
+        q.where(predicates.toArray(Predicate[]::new));
+        return s.createQuery(q).getSingleResult();
+    }
+
     @Override
     public List<ElectronicLocker> getAllElectronicLockers(Map<String, String> params) {
-        Session s = Objects.requireNonNull(this.factoryBean.getObject()).getCurrentSession();
+        Session s = this.factoryBean.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<ElectronicLocker> q = b.createQuery(ElectronicLocker.class);
         Root<ElectronicLocker> r = q.from(ElectronicLocker.class);
-        q.select(r);
 
         List<Predicate> predicates = new ArrayList<>();
 
         String residentName = params.get("residentName");
-        if (residentName != null && residentName.isEmpty()) {
+        if (residentName != null && !residentName.isEmpty()) {
             Join<ElectronicLocker, Resident> residentJoin = r.join("residentId");
             predicates.add(b.like(residentJoin.get("name"), String.format("%%%s%%", residentName)));
         }
@@ -48,9 +63,30 @@ public class ElectronicLockerRepositoryImpl implements ElectronicLockerRepositor
             q.where(predicates.toArray(new Predicate[0]));
         }
 
-        Query query = s.createQuery(q);
+        Query<ElectronicLocker> query = s.createQuery(q);
+
+        String p = params.get("page");
+        int page = p != null && !p.isEmpty() ? Integer.parseInt(p) : 1;
+        int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE").toString());
+
+        long totalRecords = countElectronicLockers(params);
+        long totalPages = (totalRecords + pageSize - 1) / pageSize;
+
+        if (page > totalPages) {
+            page = (int) totalPages;
+        }
+
+        int start = (page - 1) * pageSize;
+        query.setFirstResult(start);
+        query.setMaxResults(pageSize);
+
+        // Pass pagination information to params map
+        params.put("totalPages", String.valueOf(totalPages));
+        params.put("currentPage", String.valueOf(page));
+
         return query.getResultList();
     }
+
 
     @Override
     public void addElectronicLocker(ElectronicLocker el) {

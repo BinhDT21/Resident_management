@@ -1,11 +1,11 @@
 package com.nhom13.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.ejb.Local;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -14,19 +14,21 @@ public class InvoiceDTO {
     private int id;
     private String name;
     private long amount;
-    private LocalDate dueDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
+    private Date dueDate;
     private String status;
     private String paymentProve;
     private int residentId;
     private String lastName;
     private String firstName;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
     private Date createdDate;
 
     public InvoiceDTO(
             int id,
             String name,
             long amount,
-            LocalDate dueDate,
+            Date dueDate,
             String status,
             String paymentProve,
             String lastName,

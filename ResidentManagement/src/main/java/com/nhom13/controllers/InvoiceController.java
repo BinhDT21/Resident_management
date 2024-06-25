@@ -5,10 +5,13 @@ import com.nhom13.pojo.Resident;
 import com.nhom13.services.InvoiceService;
 import com.nhom13.services.ResidentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,17 +25,24 @@ public class InvoiceController {
     @Autowired
     private ResidentService residentService;
 
+    @Autowired
+    private Environment env;
+
     @GetMapping("/invoice-residents")
     public String invoiceResidentsView(Model model, @RequestParam Map<String, String> params) {
-        List<Resident> residents = invoiceService.getDetailInvoiceForResident(params);
+        List<Resident> residents = residentService.getResidentWithInvoices(params);
+        model.addAttribute("totalPages", params.get("totalPages"));
+        model.addAttribute("currentPage", params.get("currentPage"));
         model.addAttribute("residents", residents);
         return "invoice-residents";
     }
 
     @GetMapping("/invoice-residents/{id}/all")
     public String getInvoiceOfUser(@PathVariable int id, @RequestParam Map<String, String> params, Model model) {
+        List<Invoice> invoices = invoiceService.getByResidentId(id);
         model.addAttribute("residentId", id);
-        model.addAttribute("invoices", invoiceService.getByResidentId(id));
+        model.addAttribute("invoices", invoices);
+
         return "invoice-resident-detail";
     }
 

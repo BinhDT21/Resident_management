@@ -18,6 +18,7 @@ import javax.persistence.criteria.*;
 
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -33,8 +34,74 @@ public class ResidentRepositoryImpl implements ResidentRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
+    @Autowired
+    private Environment env;
 
     private EntityManager em;
+
+    public long countResidents(Map<String, String> params){
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Long> query = b.createQuery(Long.class);
+
+        Root<Resident> rR = query.from(Resident.class);
+        query.select(b.count(rR));
+
+
+        List<Predicate> predicates = new ArrayList<>();
+        String block = params.get("block");
+        if (block != null && !block.isEmpty()) {
+            predicates.add(b.equal(rR.get("userId").get("active"), 0));
+        } else {
+            predicates.add(b.equal(rR.get("userId").get("active"), 1));
+        }
+        query.where(predicates.toArray(new Predicate[predicates.size()]));
+
+        return s.createQuery(query).getSingleResult();
+    }
+
+    @Override
+    public List<Resident> getResidentWithInvoices(Map<String, String> params) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery query = b.createQuery(Resident.class);
+        Root<Resident> root = query.from(Resident.class);
+        root.fetch("invoiceSet", JoinType.LEFT);
+        query.select(root).distinct(true);
+
+        List<Predicate> predicates = new ArrayList<>();
+        String block = params.get("block");
+        if (block != null && !block.isEmpty()) {
+            predicates.add(b.equal(root.get("userId").get("active"), 0));
+        } else {
+            predicates.add(b.equal(root.get("userId").get("active"), 1));
+        }
+        query.where(predicates.toArray(new Predicate[predicates.size()]));
+
+        Query q = s.createQuery(query);
+
+
+        String p = params.get("page");
+
+        int page = p != null && !p.isEmpty() ? Integer.parseInt(p) : 1;
+        int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE").toString());
+
+        long totalRecords = countResidents(params);
+        long totalPages = Math.round((float)totalRecords / pageSize);
+
+        if(page > totalPages){
+            page = (int) totalPages;
+        }
+
+        q.setMaxResults(pageSize);
+        q.setFirstResult((page - 1) * pageSize);
+        List<Resident> residents = q.getResultList();
+
+        params.put("totalPages", String.valueOf(totalPages));
+        params.put("currentPage", String.valueOf(page));
+
+        return residents;
+    }
 
     @Override
     public List<Resident> loadResident(Map<String, String> params) {
@@ -42,8 +109,8 @@ public class ResidentRepositoryImpl implements ResidentRepository {
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<Object[]> query = b.createQuery(Object[].class);
 
-        Root rR = query.from(Resident.class);
-        Root rU = query.from(User.class);
+        Root<Resident> rR = query.from(Resident.class);
+        Root<User> rU = query.from(User.class);
 
         query.multiselect(rR.get("id"), rU.get("firstName"), rU.get("lastName"),
                 rU.get("dob"), rU.get("address"), rU.get("phone"), rU.get("active"), rU.get("id"));
@@ -68,6 +135,25 @@ public class ResidentRepositoryImpl implements ResidentRepository {
         query.orderBy(b.asc(rR.get("id")));
 
         Query q = s.createQuery(query);
+
+        String p = params.get("page");
+        int page = p != null && !p.isEmpty() ? Integer.parseInt(p) : 1;
+        int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE").toString());
+
+        long totalRecords = countResidents(params);
+        long totalPages = (totalRecords + pageSize - 1) / pageSize;
+
+        if (page > totalPages) {
+            page = (int) totalPages;
+        }
+
+        int start = (page - 1) * pageSize;
+        q.setFirstResult(start);
+        q.setMaxResults(pageSize);
+
+        params.put("totalPages", String.valueOf(totalPages));
+        params.put("currentPage", String.valueOf(page));
+
         return q.getResultList();
     }
 

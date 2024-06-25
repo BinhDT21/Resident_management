@@ -1,12 +1,12 @@
 package com.nhom13.repositories.impl;
 
-import com.nhom13.DTOs.InvoiceDTO;
 import com.nhom13.pojo.Invoice;
 import com.nhom13.pojo.Resident;
 import com.nhom13.pojo.User;
 import com.nhom13.repositories.InvoiceRepository;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,37 +23,41 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
+    @Autowired
+    private Environment env;
 
-    @Override
-    public List<Resident> getDetailInvoiceForResident(Map<String, String> params) {
+    public long countResidents(Map<String, String> params){
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
-        CriteriaQuery query = b.createQuery(Resident.class);
-        Root<Resident> root = query.from(Resident.class);
-        root.fetch("invoiceSet", JoinType.LEFT);
-        query.select(root).distinct(true);
+        CriteriaQuery<Long> query = b.createQuery(Long.class);
 
-        Query q = s.createQuery(query);
+        Root<Resident> rR = query.from(Resident.class);
+        Root<User> rU = query.from(User.class);
 
-        List<Resident> residents = q.getResultList();
-        Set<String> statuses = Set.of("unpaid", "waiting", "paid");
+        query.select(b.count(rR));
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(rU.get("id"), rR.get("userId")));
 
-//        residents.stream().forEach(r -> r.setInvoiceSet(r.getInvoiceSet().stream()
-//                .filter(i -> i.getStatus().equals("unpaid"))
-//                .collect(Collectors.toSet())));
-
-        residents.forEach(r -> {
-            Set<Invoice> invoices = r.getInvoiceSet().stream()
-                    .filter(i -> statuses.contains(i.getStatus()))
-                    .collect(Collectors.toSet());
-            r.setInvoiceSet(invoices);
-            r.setUnpaidInvoiceCount(invoices.stream().filter(i -> i.getStatus().equals("unpaid")).count());
-            r.setWaitingInvoiceCount(invoices.stream().filter(i -> i.getStatus().equals("waiting")).count());
-            r.setPaidInvoiceCount(invoices.stream().filter(i -> i.getStatus().equals("paid")).count());
-        });
-
-        return residents;
+        query.where(predicates.toArray(Predicate[]::new));
+        return s.createQuery(query).getSingleResult();
     }
+
+    public long countInvoices(Map<String, String> params){
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Long> q = b.createQuery(Long.class);
+
+        Root<Invoice> rI = q.from(Invoice.class);
+        Root<Resident> rR = q.from(Resident.class);
+
+        q.select(b.count(rI));
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(rR.get("id"), rI.get("residentId")));
+
+        q.where(predicates.toArray(Predicate[]::new));
+        return s.createQuery(q).getSingleResult();
+    }
+
 
     @Override
     public Invoice getInvoiceById(int id) {
@@ -62,16 +66,11 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     }
 
 
-    //Unpaid vừa tạo chưa thanh toán
-    //Waiting chờ xác nhận từ admin
-    //Paid admin đã xác nhận
     @Override
     public void createOrUpdateInvoice(Invoice invoice) {
-        Date currentDate = new Date();
         Session s = this.factory.getObject().getCurrentSession();
         if(invoice.getId() == null) {
             invoice.setStatus("unpaid");
-            invoice.setCreatedDate(currentDate);
             s.save(invoice);
         } else
             s.update(invoice);
@@ -83,10 +82,20 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         i.setActive(Short.parseShort("0"));
     }
 
+    @Override
     public List<Invoice> getByResidentId(int residentId) {
         Session s = factory.getObject().getCurrentSession();
-        return s.createQuery("SELECT i FROM Invoice i WHERE i.residentId.id = :residentId", Invoice.class)
-                .setParameter("residentId", residentId).getResultList();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Invoice> query = b.createQuery(Invoice.class);
+        Root<Invoice> root = query.from(Invoice.class);
+
+        Predicate condition = b.equal(root.get("residentId").get("id"), residentId);
+        query.where(condition);
+
+        query.orderBy(b.asc(root.get("id")));
+
+        Query q = s.createQuery(query);
+        return q.getResultList();
     }
 
     @Override
@@ -125,40 +134,45 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                 rI.get("dueDate"),
                 rI.get("status"),
                 rI.get("paymentProve"),
-                rU.get("lastName"),  // Fetch last name from Resident
-                rU.get("firstName"), // Fetch first name from Resident
-                rI.get("createdDate")  // Updated to match Java camelCase convention
+                rU.get("lastName"),
+                rU.get("firstName"),
+                rI.get("createdDate")
         );
 
         List<Predicate> predicates = new ArrayList<>();
-        // Lấy và xử lý các tham số từ params
-        String kw = params.getOrDefault("kw", "");
-        String status = params.get("status");
-        String isActive = params.get("active");
-
-        // Thêm điều kiện cho từ khóa tìm kiếm (kw)
-        if (kw != null && !kw.isEmpty()) {
-            predicates.add(b.like(rI.get("name"), String.format("%%%s%%", kw)));
-        }
-
-        // Thêm điều kiện cho status
-        if (status != null && !status.isEmpty()) {
-            predicates.add(b.equal(rI.get("status"), Integer.parseInt(status)));
-        }
-
-        // Thêm điều kiện cho active
-        if (isActive != null && !isActive.isEmpty()) {
-            predicates.add(b.equal(rI.get("active"), Boolean.parseBoolean(isActive)));
-        }
+        predicates.add(b.equal(rU.get("id"), rR.get("userId")));
 
         // Thêm điều kiện join với bảng Resident
         predicates.add(b.equal(rI.get("residentId"), rR.get("id")));
 
+        String active = params.get("active");
+        if(active != null && !active.isEmpty()) {
+            predicates.add(b.equal(rI.get("active"), active));
+        }
+
         query.where(predicates.toArray(Predicate[]::new));
         query.orderBy(b.desc(rI.get("createdDate")));
 
-
         Query q = session.createQuery(query);
+        String p = params.get("page");
+
+        int page = p != null && !p.isEmpty() ? Integer.parseInt(p) : 1;
+        int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE").toString());
+
+        long totalRecords = countInvoices(params);
+        long totalPages = (totalRecords + pageSize - 1) / pageSize;
+
+        if(page > totalPages){
+            page = (int) totalPages;
+        }
+
+        int start = (page - 1) * pageSize;
+        q.setFirstResult(start);
+        q.setMaxResults(pageSize);
+
+        params.put("totalPages", String.valueOf(totalPages));
+        params.put("currentPage", String.valueOf(page));
+
         return q.getResultList();
     }
 }

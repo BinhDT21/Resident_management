@@ -4,7 +4,10 @@
  */
 package com.nhom13.controllers;
 
+import com.nhom13.pojo.Feedback;
 import com.nhom13.services.FeedbackService;
+
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +27,9 @@ public class FeedbackController {
     
     @RequestMapping("/feedbacks")
     public String feedback (@RequestParam() Map<String, String> params, Model model){
+        List<Object[]> feedbacks = feedbackSer.loadFeedbacks(params);
+        model.addAttribute("totalPages", params.get("totalPages"));
+        model.addAttribute("currentPage", params.get("currentPage"));
         model.addAttribute("feedbacks",this.feedbackSer.loadFeedbacks(params));
         return "feedbacks";
     }

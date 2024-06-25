@@ -22,6 +22,12 @@
 <body>
 <h1 class="text-center text-dark mt-1">QUẢN LÝ HÓA ĐƠN</h1>
 <a class="btn btn-success" href="<c:url value="/invoices/create-multiple"/>">Tạo hóa đơn hàng loạt</a>
+
+
+<form class="d-flex mx-2" action="<c:url value="/"/>">
+    <input type="hidden" name="block" value="0"/>
+    <button class="btn btn-dark mt-2 mb-2" type="submit" >Cư dân đã khóa</button>
+</form>
 <table class="table">
     <thead>
     <tr>
@@ -37,8 +43,8 @@
         <tr>
             <td>${r.id}</td>
             <td>${r.userId.lastName} ${r.userId.firstName}</td>
-            <td>${r.unpaidInvoiceCount}</td>
-            <td>${r.waitingInvoiceCount}</td>
+            <td>${r.invoiceSet.stream().filter(i -> i.getStatus().equals("unpaid")).count()}</td>
+            <td>${r.invoiceSet.stream().filter(i -> i.getStatus().equals("waiting")).count()}</td>
             <td>
                 <a class="btn btn-primary"
                    href="<c:url value="/invoice-residents/${r.id}/all"/>">
@@ -49,5 +55,22 @@
     </c:forEach>
     </tbody>
 </table>
+
+<nav>
+    <ul class="pagination">
+        <c:if test="${currentPage > 1}">
+            <li class="page-item"><a class="page-link" href="?page=${currentPage - 1}">Previous</a></li>
+        </c:if>
+        <c:forEach var="i" begin="1" end="${totalPages}">
+            <li class="page-item <c:if test='${i == currentPage}'>active</c:if>'">
+                <a class="page-link" href="?page=${i}">${i}</a>
+            </li>
+        </c:forEach>
+        <c:if test="${currentPage < totalPages}">
+            <li class="page-item"><a class="page-link" href="?page=${currentPage + 1}">Next</a></li>
+        </c:if>
+    </ul>
+</nav>
+
 </body>
 </html>

@@ -6,20 +6,15 @@ package com.nhom13.configs;
 
 import com.nhom13.formatters.DateFormatter;
 import com.nhom13.formatters.ElectronicLockerFormatter;
-import com.nhom13.formatters.LocalDateFormatter;
 import com.nhom13.formatters.ResidentFormatter;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 /**
  *
@@ -52,6 +47,5 @@ public class WebAppContextConfig implements WebMvcConfigurer {
         registry.addFormatter(new ElectronicLockerFormatter());
         registry.addFormatter(new ResidentFormatter());
         registry.addFormatter(new DateFormatter());
-        registry.addFormatter(new LocalDateFormatter());
     }
 }

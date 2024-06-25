@@ -4,10 +4,7 @@
  */
 package com.nhom13.repositories.impl;
 
-import com.nhom13.pojo.Admin;
-import com.nhom13.pojo.Answer;
-import com.nhom13.pojo.Question;
-import com.nhom13.pojo.Survey;
+import com.nhom13.pojo.*;
 import com.nhom13.repositories.SurveyRepository;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +17,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,6 +33,23 @@ public class SurveyRepositoryImpl implements SurveyRepository{
     
     @Autowired
     private LocalSessionFactoryBean factory;
+    @Autowired
+    private Environment env;
+
+    public long countSurveys(Map<String, String> params){
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Long> q = b.createQuery(Long.class);
+
+        Root<Survey> rS = q.from(Survey.class);
+
+        q.select(b.count(rS));
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(rS.get("adminId").get("id"), rS.get("adminId")));
+
+        q.where(predicates.toArray(Predicate[]::new));
+        return s.createQuery(q).getSingleResult();
+    }
 
     @Override
     public List<Survey> loadSurveys(Map<String, String> params) {
@@ -57,8 +72,27 @@ public class SurveyRepositoryImpl implements SurveyRepository{
         
         query.where(predicates.toArray(Predicate[]::new));
         query.orderBy(b.desc(r.get("createdDate")));
-        
+
         Query q = s.createQuery(query);
+
+        String p = params.get("page");
+        int page = p != null && !p.isEmpty() ? Integer.parseInt(p) : 1;
+        int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE").toString());
+
+        long totalRecords = countSurveys(params);
+        long totalPages = (totalRecords + pageSize - 1) / pageSize;
+
+        if (page > totalPages) {
+            page = (int) totalPages;
+        }
+
+        int start = (page - 1) * pageSize;
+        q.setFirstResult(start);
+        q.setMaxResults(pageSize);
+
+        params.put("totalPages", String.valueOf(totalPages));
+        params.put("currentPage", String.valueOf(page));
+
         return q.getResultList();
     }
 
@@ -95,7 +129,7 @@ public class SurveyRepositoryImpl implements SurveyRepository{
                 rS.get("title"),
                 rQ.get("content")
         );
-        
+
 
         Query q = s.createQuery(query);
         return q.getResultList();

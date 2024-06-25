@@ -39,6 +39,8 @@ public class SurveyController {
     @RequestMapping("/surveys")
     public String surveys(Model model, @RequestParam() Map<String, String> params) {
         model.addAttribute("surveys", this.surService.loadSurveys(params));
+        model.addAttribute("totalPages", params.get("totalPages"));
+        model.addAttribute("currentPage", params.get("currentPage"));
         return "surveys";
     }
 

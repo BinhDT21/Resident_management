@@ -20,9 +20,9 @@
         <put-attribute name="content" value="/WEB-INF/pages/resident.jsp" />
     </definition>
 
-    <definition name="electronicLocker" extends="baseLayout">
+    <definition name="electronic-lockers" extends="baseLayout">
         <put-attribute name="title" value="Quản lý tủ đồ" />
-        <put-attribute name="content" value="/WEB-INF/pages/electronicLocker.jsp" />
+        <put-attribute name="content" value="/WEB-INF/pages/electronic-locker.jsp" />
     </definition>
 
     <definition name="item" extends="baseLayout">

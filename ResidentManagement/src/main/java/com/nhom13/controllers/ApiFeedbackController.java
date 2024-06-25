@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,12 +37,7 @@ public class ApiFeedbackController {
     //-------GET All Feedback-------//
 
     @GetMapping(value = "/feedbacks", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacks(@RequestParam (required = false) String status){
-        Map<String, String> params = new HashMap<>();
-        if (status != null) {
-            params.put("status", status);
-        }
-
+    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacks(@RequestParam Map<String, String> params){
         List<Object[]> feedbacks = this.feedbackSer.loadFeedbacks(params);
         List<FeedbackDTO> dtoList = new ArrayList<>();
         for (Object[] obj : feedbacks) {

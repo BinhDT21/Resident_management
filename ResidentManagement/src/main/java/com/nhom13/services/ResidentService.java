@@ -21,4 +21,5 @@ public interface ResidentService {
     User getUserById (int id);  //lay user theo id
     void deleteUser(int id);    //deactive user
     List<Resident> getAll();
+    List<Resident> getResidentWithInvoices(Map<String, String> params);
 }
