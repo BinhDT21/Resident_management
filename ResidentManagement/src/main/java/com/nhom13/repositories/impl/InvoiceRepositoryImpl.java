@@ -2,6 +2,7 @@ package com.nhom13.repositories.impl;
 
 import com.nhom13.pojo.Invoice;
 import com.nhom13.pojo.Resident;
+import com.nhom13.pojo.Survey;
 import com.nhom13.pojo.User;
 import com.nhom13.repositories.InvoiceRepository;
 import org.hibernate.Session;
@@ -17,6 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import org.springframework.core.env.Environment;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
@@ -24,37 +26,27 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
-
-    @Override
-    public List<Resident> getDetailInvoiceForResident(Map<String, String> params) {
+    
+    @Autowired
+    private Environment env;
+    
+    public long countInvoices(Map<String, String> params){
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
-        CriteriaQuery query = b.createQuery(Resident.class);
-        Root<Resident> root = query.from(Resident.class);
-        root.fetch("invoiceSet", JoinType.LEFT);
-        query.select(root).distinct(true);
+        CriteriaQuery<Long> q = b.createQuery(Long.class);
 
-        Query q = s.createQuery(query);
+        Root<Invoice> rI = q.from(Invoice.class);
+        Root<Resident> rR = q.from(Resident.class);
 
-        List<Resident> residents = q.getResultList();
-        Set<String> statuses = Set.of("unpaid", "waiting", "paid");
+        q.select(b.count(rI));
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(rR.get("id"), rI.get("residentId")));
 
-//        residents.stream().forEach(r -> r.setInvoiceSet(r.getInvoiceSet().stream()
-//                .filter(i -> i.getStatus().equals("unpaid"))
-//                .collect(Collectors.toSet())));
-
-        residents.forEach(r -> {
-            Set<Invoice> invoices = r.getInvoiceSet().stream()
-                    .filter(i -> statuses.contains(i.getStatus()))
-                    .collect(Collectors.toSet());
-            r.setInvoiceSet(invoices);
-            r.setUnpaidInvoiceCount(invoices.stream().filter(i -> i.getStatus().equals("unpaid")).count());
-            r.setWaitingInvoiceCount(invoices.stream().filter(i -> i.getStatus().equals("waiting")).count());
-            r.setPaidInvoiceCount(invoices.stream().filter(i -> i.getStatus().equals("paid")).count());
-        });
-
-        return residents;
+        q.where(predicates.toArray(Predicate[]::new));
+        return s.createQuery(q).getSingleResult();
     }
+
+    
 
     @Override
     public Invoice getInvoiceById(int id) {
@@ -62,22 +54,21 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         return s.get(Invoice.class, id);
     }
 
-
     //Unpaid vừa tạo chưa thanh toán
     //Waiting chờ xác nhận từ admin
     //Paid admin đã xác nhận
     @Override
     public void createOrUpdateInvoice(Invoice invoice) {
         Session s = this.factory.getObject().getCurrentSession();
-//        LocalDate dueDate = invoice.getDueDate();
-//        LocalDate atNow = LocalDate.now();
 
-//        long dayisDifference = ChronoUnit.DAYS.between(atNow, dueDate);
-        if(invoice.getId() == null) {
+        if (invoice.getId() == null) {
+            invoice.setActive(Short.parseShort("1"));
+            invoice.setCreatedDate(new Date());
             invoice.setStatus("unpaid");
             s.save(invoice);
-        } else
+        } else {
             s.update(invoice);
+        }
 
     }
 
@@ -89,7 +80,64 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
 
     public List<Invoice> getByResidentId(int residentId) {
         Session s = factory.getObject().getCurrentSession();
-        return s.createQuery("SELECT i FROM Invoice i WHERE i.residentId.id = :residentId", Invoice.class)
-                .setParameter("residentId", residentId).getResultList();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Invoice> query = b.createQuery(Invoice.class);
+        Root<Invoice> root = query.from(Invoice.class);
+
+        Predicate condition = b.equal(root.get("residentId").get("id"), residentId);
+        query.where(condition);
+
+        query.orderBy(b.asc(root.get("id")));
+
+        Query q = s.createQuery(query);
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Object[]> getInvoiceByUserId(int userId, Map<String, String> params) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Object> q = b.createQuery(Object.class);
+
+        Root rI = q.from(Invoice.class);
+        Root rR = q.from(Resident.class);
+
+        q.multiselect(rI.get("id"), rI.get("name"), rI.get("amount"), rI.get("dueDate"), rI.get("status"),
+                 rI.get("paymentProve"), rI.get("createdDate"));
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        predicates.add(b.equal(rI.get("residentId"), rR.get("id")));
+
+        predicates.add(b.equal(rI.get("active"), Short.parseShort("1")));
+        predicates.add(b.equal(rR.get("userId"), userId));
+        
+        String status = params.get("status");
+        if (status != null && !status.isEmpty()){
+            predicates.add(b.like(rI.get("status"), status));
+        }
+        
+        q.where(predicates.toArray(Predicate[]::new));
+        
+        q.orderBy(b.desc(rI.get("id")));
+        
+        Query query = s.createQuery(q);
+        return query.getResultList();
+
+    }
+
+    @Override
+    public void updatePaymentProve(Invoice invoice) {
+        Session s = this.factory.getObject().getCurrentSession();
+        s.update(invoice);
+    }
+    
+    
+    
+
+    @Override
+    public void createMultiple(List<Invoice> invoices) {
+        Session s = factory.getObject().getCurrentSession();
+        invoices.forEach(i -> s.save(i));
     }
 }

@@ -7,7 +7,9 @@ package com.nhom13.repositories.impl;
 import com.nhom13.pojo.Admin;
 import com.nhom13.pojo.Answer;
 import com.nhom13.pojo.Question;
+import com.nhom13.pojo.Resident;
 import com.nhom13.pojo.Survey;
+import com.nhom13.pojo.User;
 import com.nhom13.repositories.SurveyRepository;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +22,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,6 +38,23 @@ public class SurveyRepositoryImpl implements SurveyRepository{
     
     @Autowired
     private LocalSessionFactoryBean factory;
+    @Autowired
+    private Environment env;
+    
+    public long countSurveys(Map<String, String> params){
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Long> q = b.createQuery(Long.class);
+
+        Root<Survey> rS = q.from(Survey.class);
+
+        q.select(b.count(rS));
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(rS.get("adminId").get("id"), rS.get("adminId")));
+
+        q.where(predicates.toArray(Predicate[]::new));
+        return s.createQuery(q).getSingleResult();
+    }
 
     @Override
     public List<Survey> loadSurveys(Map<String, String> params) {
@@ -59,6 +79,25 @@ public class SurveyRepositoryImpl implements SurveyRepository{
         query.orderBy(b.desc(r.get("createdDate")));
         
         Query q = s.createQuery(query);
+        
+        String p = params.get("page");
+        int page = p != null && !p.isEmpty() ? Integer.parseInt(p) : 1;
+        int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE").toString());
+
+        long totalRecords = countSurveys(params);
+        long totalPages = (totalRecords + pageSize - 1) / pageSize;
+
+        if (page > totalPages) {
+            page = (int) totalPages;
+        }
+
+        int start = (page - 1) * pageSize;
+        q.setFirstResult(start);
+        q.setMaxResults(pageSize);
+
+        params.put("totalPages", String.valueOf(totalPages));
+        params.put("currentPage", String.valueOf(page));
+
         return q.getResultList();
     }
 
@@ -129,6 +168,48 @@ public class SurveyRepositoryImpl implements SurveyRepository{
     public void blockSurvey(int id) {
         Survey s = this.getSurveyById(id);
         s.setActive(Short.parseShort("0"));
+    }
+
+    @Override
+    public List<Object[]> getSurveyByUserId(int userId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Object> q = b.createQuery(Object.class);
+        
+        Root rR = q.from(Resident.class);
+        Root rA = q.from(Answer.class);
+        Root rQ = q.from(Question.class);
+        Root rS = q.from(Survey.class);
+        
+        q.multiselect(rS.get("id"),rS.get("title"));
+        
+        List<Predicate> predicates = new ArrayList<>();
+        
+        //join Question - Answer 
+        predicates.add(b.equal(rQ.get("id"), rA.get("questionId")));
+        //join Answer - Resident 
+        predicates.add(b.equal(rA.get("residentId"), rR.get("id")));
+        //join Question - Survey
+        predicates.add(b.equal(rQ.get("surveyId"), rS.get("id")));
+        
+        //rR.userId = userId
+        predicates.add(b.equal(rR.get("userId"), userId));
+        
+        //rS.active = 1
+        predicates.add(b.equal(rS.get("active"), Short.parseShort("1")));
+        
+        q.where(predicates.toArray(Predicate[]::new));
+        q.groupBy(rS.get("id"), rS.get("title"));
+        
+        Query query = s.createQuery(q);
+        return query.getResultList();
+    }
+
+    @Override
+    public void deleteSurvey(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Survey survey = this.getSurveyById(id);
+        s.delete(survey);
     }
 
     

@@ -46,5 +46,15 @@ public class SurveyServiceImpl implements SurveyService{
     public void blockSurvey(int id) {
         this.surRepo.blockSurvey(id);
     }
+
+    @Override
+    public List<Object[]> getSurveyByUserId(int userId) {
+        return this.surRepo.getSurveyByUserId(userId);
+    }
+
+    @Override
+    public void deleteSurvey(int id) {
+        this.surRepo.deleteSurvey(id);
+    }
     
 }

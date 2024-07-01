@@ -6,6 +6,7 @@ package com.nhom13.controllers;
 
 import com.nhom13.services.NotificationService;
 import com.nhom13.services.ResidentService;
+import com.nhom13.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,13 +26,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiResidentController {
     @Autowired
     private ResidentService resSer;
-    
     @Autowired
-    private NotificationService notSer;
+    private UserService userSer;
+    
     
     @DeleteMapping("/resident/{residentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable(value = "residentId") int id) {
         this.resSer.deleteUser(id);        
+    }
+    
+    @DeleteMapping("/resident/delete/{residentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePermanent(@PathVariable(value = "residentId") int id) {
+        this.userSer.deleteUser(id);
     }
 }

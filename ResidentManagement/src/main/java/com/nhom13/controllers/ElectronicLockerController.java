@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Map;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/electronic-lockers")
@@ -16,8 +17,10 @@ public class ElectronicLockerController {
     private ElectronicLockerService electronicLockerService;
 
     @GetMapping
-    public String getAll(Map<String, String> params, Model model) {
+    public String getAll(@RequestParam Map<String, String> params, Model model) {
         model.addAttribute("electronicLockers", this.electronicLockerService.getAllElectronicLockers(params));
-        return "electronicLocker";
+        model.addAttribute("totalPages", params.get("totalPages"));
+        model.addAttribute("currentPage", params.get("currentPage"));
+        return "electronic-lockers";
     }
 }

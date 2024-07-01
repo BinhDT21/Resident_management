@@ -1,5 +1,5 @@
 import { useContext, useState } from "react"
-import { Button, Form } from "react-bootstrap"
+import { Button, Form, Spinner } from "react-bootstrap"
 import { Navigate, useNavigate } from "react-router-dom";
 import { DispatchContext, UserContext } from "../../configs/Contexts";
 import APIs, { authApi, endpoints } from "../../configs/APIs";
@@ -31,7 +31,8 @@ const Login = () => {
     const dispatch = useContext(DispatchContext)
     const currentUser = useContext(UserContext)
     const nav = useNavigate();
-    const [fcmToken, setFcmToken] = useState ("")
+    const [fcmToken, setFcmToken] = useState("")
+    const [loading, setLoading] = useState(false)
 
 
     const change = (event, field) => {
@@ -42,15 +43,15 @@ const Login = () => {
 
     const getToken = async (username) => {
         const token = await generateToken()
-        
+
         try {
-            if(token !== "" && token !== null){
-                const res = await authApi().post(endpoints['update-token'],{
-                    "username":username,
-                    "token":token
+            if (token !== "" && token !== null) {
+                const res = await authApi().post(endpoints['update-token'], {
+                    "username": username,
+                    "token": token
                 })
             }
-        }catch(ex){
+        } catch (ex) {
             console.log("Lỗi update notification token khi gọi api update token")
         }
     }
@@ -58,34 +59,35 @@ const Login = () => {
     const login = async (e) => {
         e.preventDefault()
 
-
-
         try {
+            setLoading(true)
             let res = await APIs.post(endpoints['login'], { ...user });
             cookie.save("token", res.data);
 
             setTimeout(async () => {
                 let u = await authApi().get(endpoints['current-user'])
-                console.info("56",u.data)
-                if(u.data.active===0){
+                console.info("56", u.data)
+                if (u.data.active === 0) {
                     alert("Tài khoảng của bạn đã bị khóa")
                     nav("/login")
-                }else{
+                } else {
                     dispatch({
                         "type": "login",
                         "payload": u.data
                     })
                 }
-                
+
                 await getToken(u.data.username)
             }, 100)
 
             nav("/")
-            
-            
+
+
         } catch (ex) {
             alert("Tên đăng nhập hoặc mật khẩu sai")
             console.error(ex)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -96,7 +98,6 @@ const Login = () => {
     return (
         <>
             <div style={styles.container_login}>
-
                 <div style={{ alignItems: "center", alignContent: "center" }}>
                     <div style={styles.container_form_login}>
                         <h4 className="text-center  mt-3 mb-3">Vui lòng đăng nhập</h4>
@@ -109,9 +110,18 @@ const Login = () => {
                                 <Form.Label>Mật khẩu</Form.Label>
                                 <Form.Control onChange={e => change(e, "password")} value={user["password"]} type="password" placeholder="password" />
                             </Form.Group>
-                            <div className="d-flex justify-content-center">
-                                <Button variant="primary" type="submit" className="mb-1 mt-1 ">Đăng nhập</Button>
-                            </div>
+
+
+                            {loading === true ? <>
+                                <div className="d-flex justify-content-center">
+                                    <Spinner variant="primary" />
+                                </div>
+
+                            </> : <>
+                                <div className="d-flex justify-content-center">
+                                    <Button variant="primary" type="submit" className="mb-1 mt-1 ">Đăng nhập</Button>
+                                </div>
+                            </>}
                         </Form>
                     </div>
                 </div>

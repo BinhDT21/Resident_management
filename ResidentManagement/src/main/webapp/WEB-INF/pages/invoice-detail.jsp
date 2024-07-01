@@ -42,6 +42,10 @@
         </form:select>
         <label for="status">Trạng thái</label>
     </div>
+        
+        <c:if test="${invoice.paymentProve.length() > 0}">
+            <img src="${invoice.paymentProve}" width="200" class="rounded" />
+        </c:if>
 
     <div class="form-floating mb-3 mt-3">
         <button class="btn btn-primary mt-1" type="submit">

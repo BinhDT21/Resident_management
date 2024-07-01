@@ -11,9 +11,17 @@
 
 <h1 class="text-center text-dark mt-1">THÊM QUẢN TRỊ VIÊN</h1>
 
+<c:if test="${param.duplicate != null}">
+    <div class="alert alert-danger"> 
+        Người dùng này đã tồn tại, vui lòng kiểm tra lại thông tin
+    </div>
+</c:if>
+
 <c:url value="/admin" var="action" />
 <form:form method="post" action="${action}" modelAttribute="user">
-
+    <form:errors path="*" element="div" cssClass="alert alert-danger" />
+    
+    
     <div class="form-floating mb-3 mt-3">
         <form:input  class="form-control"  id="firstName"  placeholder="Họ" path="firstName" />
         <label for="firstName">Họ</label>
@@ -38,7 +46,7 @@
         <form:input type="date"  class="form-control"  id="dob"   placeholder="Ngày sinh" path="dob" />
         <label for="dob">Ngày sinh</label>
     </div>
-    
+
     <div class="form-floating mb-3 mt-3">
         <form:input class="form-control"  id="address"  placeholder="Địa chỉ" path="address" />
         <label for="address">Địa chỉ</label>

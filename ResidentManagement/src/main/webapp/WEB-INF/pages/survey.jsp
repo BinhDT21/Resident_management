@@ -36,6 +36,7 @@
         <th>Ngày tạo</th>
         <th>Trạng thái</th>
         <th></th>
+        <th></th>
     </tr>
     <c:forEach items="${surveys}" var="s">
         <tr>
@@ -59,15 +60,36 @@
                 
                 <c:if test="${s.active==1}">
                     <c:url value="/api/surveys/${s.id}" var="blocked"/>
-                    <button onclick="blockSurvey('${blocked}')" class="btn btn-danger ">Khóa khảo sát</button>
+                    <button onclick="blockSurvey('${blocked}')" class="btn btn-warning ">Khóa khảo sát</button>
                 </c:if>
 
+            </td>
+            <td>
+                <c:url value="/api/surveys/delete/${s.id}" var="delete"/>
+                <button onclick="confirmDeleteSurvey('${delete}')"  class="btn btn-danger">&times;</button>
             </td>
 
         </tr>
     </c:forEach>
 </table>
+    
 <c:url value="/add_survey" var="addSurvey"/>
 <a class="btn btn-primary mt-2 mb-2" href="${addSurvey}">Tạo khảo sát</a>
+
+<nav>
+    <ul class="pagination">
+        <c:if test="${currentPage > 1}">
+            <li class="page-item"><a class="page-link" href="?page=${currentPage - 1}">Previous</a></li>
+        </c:if>
+        <c:forEach var="i" begin="1" end="${totalPages}">
+            <li class="page-item <c:if test='${i == currentPage}'>active</c:if>'">
+                <a class="page-link" href="?page=${i}">${i}</a>
+            </li>
+        </c:forEach>
+        <c:if test="${currentPage < totalPages}">
+            <li class="page-item"><a class="page-link" href="?page=${currentPage + 1}">Next</a></li>
+        </c:if>
+    </ul>
+</nav>
 
 <script src="<c:url value="/js/script.js" />"></script>

@@ -7,9 +7,11 @@ package com.nhom13.controllers;
 import com.nhom13.pojo.Visitor;
 import com.nhom13.services.VisitorService;
 import java.util.Map;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,8 +42,19 @@ public class VisitorController {
         return "updateVisitor";
     }
     @PostMapping("/visitor")
-    public String update(@ModelAttribute(value = "visitor") Visitor v){
-        this.visitorService.updateVisitor(v);
-        return "redirect:/visitor";
+    public String update(@ModelAttribute(value = "visitor") @Valid Visitor v,
+            BindingResult result){
+        if (!result.hasErrors()) {
+            try {
+                this.visitorService.updateVisitor(v);
+                return "redirect:/visitor";
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+//                return "redirect:/resident?duplicate";
+            }
+        }
+        return "updateVisitor";
+        
+        
     }
 }

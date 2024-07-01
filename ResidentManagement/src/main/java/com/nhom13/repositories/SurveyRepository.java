@@ -18,4 +18,6 @@ public interface SurveyRepository {
     void addSurvey (List<String> questions, Survey s);
     Survey getSurveyById (int id);
     void blockSurvey (int id);
+    List<Object[]> getSurveyByUserId (int userId);
+    void deleteSurvey (int id);
 }

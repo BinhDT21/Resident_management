@@ -6,6 +6,7 @@ package com.nhom13.repositories;
 
 import com.nhom13.pojo.Admin;
 import com.nhom13.pojo.User;
+import java.util.List;
 
 /**
  *
@@ -21,4 +22,6 @@ public interface UserRepository {
     void updateUser(User u);
     //Thêm hoặc xóa token của fmc
     void updateToken (User u);
+    List<User> listAllUser ();
+    void deleteUser (int userId);//xoa hoan toan user
 }

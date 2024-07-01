@@ -16,6 +16,11 @@ export const endpoints = {
     'surveys':"/api/surveys/",
     'surveys-detail':(surveyId) => `/api/surveys/${surveyId}/`,
     'surveys-answers':(surveyId) => `/api/surveys/${surveyId}/`,
+    'user-survey':(userId) => `/api/user/${userId}/surveys/`,
+    'invoices': (userId) => `/api/user/${userId}/invoices/`,
+    'invoice-pay': (invoiceId) => `/api/invoices/${invoiceId}/`,
+    'feedback':"/api/feedbacks/",
+    'create-feedback':"/api/feedbacks/"
 }
 
 export const authApi =() => {
@@ -30,3 +35,5 @@ export const authApi =() => {
 export default axios.create({
     baseURL:BASE_URL
 })
+
+

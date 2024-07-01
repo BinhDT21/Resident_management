@@ -25,8 +25,14 @@ public class InvoiceController {
 
     @GetMapping("/invoice-residents")
     public String invoiceResidentsView(Model model, @RequestParam Map<String, String> params) {
-        List<Resident> residents = invoiceService.getDetailInvoiceForResident(params);
+        
+        
+        List<Object[]> residents = residentService.getResidentWithInvoices(params);
         model.addAttribute("residents", residents);
+        model.addAttribute("totalPages", params.get("totalPages"));
+        model.addAttribute("currentPage", params.get("currentPage"));
+        
+        
         return "invoice-residents";
     }
 
@@ -42,20 +48,30 @@ public class InvoiceController {
         model.addAttribute("invoice", invoiceService.getInvoiceById(id));
         return "invoice-detail";
     }
+
     @GetMapping("/invoice-residents/{residentId}/create")
     public String getInvoiceCreateView(@PathVariable int residentId, Model model) {
         Invoice invoice = new Invoice();
         invoice.setResidentId(new Resident(residentId));
         invoice.setStatus("unpaid");
+        invoice.setCreatedDate(new Date());
         model.addAttribute("invoice", invoice);
         return "invoice-detail";
     }
 
     @PostMapping("/invoices")
     public String createOrUpdate(@ModelAttribute Invoice invoice) {
-        invoiceService.createOrUpdateInvoice(invoice);
         int residentId = invoice.getResidentId().getId();
-        return "redirect:/invoice-residents/" + residentId + "/all";
+        
+        Resident r = this.residentService.getResidentById(residentId);
+        long amount = invoice.getAmount();
+        if (amount > 0) {
+            
+            invoice.setResidentId(r);
+            invoiceService.createOrUpdateInvoice(invoice);
+            return "redirect:/invoice-residents/" + residentId + "/all";
+        }
+        return "redirect:/invoice-residents/" + residentId + "/all?error";
     }
 
     @DeleteMapping("/invoice-residents/{residentId}/invoices/{invoiceId}")
@@ -63,48 +79,33 @@ public class InvoiceController {
         invoiceService.deleteInvoice(invoiceId);
         return "redirect:/invoice-residents/" + residentId + "/all";
     }
-
-
-//    @Autowired
-//    private InvoiceService invoiceAdminService;
-//
-//    @Autowired
-//    private ResidentService residentService;
-//
-//    @GetMapping("/invoice-residents")
-//    public String createInvoiceView(@RequestParam Map<String, String> params, Model model) {
-//        List<Resident> residents = residentService.getWithInvoices(params);
-//        model.addAttribute("residents", residents);
-//        return "invoice-residents";
-//    }
-//
-//    @GetMapping("/invoice-residents/{id}/all")
-//    public String getInvoiceOfUser(@PathVariable int id, @RequestParam Map<String, String> params, Model model) {
-//        model.addAttribute("residentId", id);
-//        model.addAttribute("invoices", invoiceAdminService.getByResidentId(id, params));
-//        return "invoice-resident-detail";
-//    }
-//
-//    @GetMapping("/invoice-residents/{residentId}/{invoiceId}")
-//    public String getInvoice(@PathVariable("invoiceId") int id, Model model) {
-//        model.addAttribute("invoice", invoiceAdminService.getInvoiceById(id));
-//        return "invoice-detail";
-//    }
-//
-//    @GetMapping("/invoice-residents/{residentId}/create")
-//    public String getInvoiceCreateView(@PathVariable int residentId, Model model) {
-//        Invoice invoice = new Invoice();
-//        invoice.setResidentId(new Resident(residentId));
-//        invoice.setStatus("unpaid");
-//        model.addAttribute("invoice", invoice);
-//        return "invoice-detail";
-//    }
-//
-//    @PostMapping("/invoices")
-//    public String createOrUpdate(@ModelAttribute Invoice invoice) {
-//        invoiceAdminService.createOrUpdate(invoice);
-//        int residentId = invoice.getResidentId().getId();
-//        return "redirect:/invoice-residents/" + residentId + "/all";
-//    }
+    
+    @GetMapping("/invoices/create-multiple")
+    public String createMultiple(Model model) {
+        List<Resident> residents = this.residentService.getAll();
+        
+        model.addAttribute("residents", residents);
+        model.addAttribute("invoice", new Invoice());
+        
+        
+        return "invoice-create-multiple";
+    }
+    
+    @PostMapping("/invoices/create-multiple")
+    public String postCreateMultiple(@ModelAttribute Invoice invoice,
+                                    @RequestParam(name= "residents", required = false) List<Integer> residentIds) {
+        
+        
+        long amount = invoice.getAmount();
+        if(amount > 0 ){
+            invoiceService.createMultiple(invoice, residentIds);
+            return "redirect:/invoice-residents";
+        }
+        
+        return "redirect:/invoices/create-multiple?error";
+        
+        
+        
+    }
 
 }

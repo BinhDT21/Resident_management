@@ -6,6 +6,7 @@ package com.nhom13.services;
 
 import com.nhom13.pojo.Admin;
 import com.nhom13.pojo.User;
+import java.util.List;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -21,4 +22,8 @@ public interface UserService  extends  UserDetailsService{
     //confirm => thay doi mk va update avatar
     void updateUser(User u);
     void updateToken(User u);
+    
+    User getCurrentUser();
+    List<User> listAllUser ();
+    void deleteUser (int userId);//xoa hoan toan user
 }

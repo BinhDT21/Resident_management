@@ -50,7 +50,7 @@
             
             <td>
                 <a class="btn btn-primary" href="<c:url value="/visitor/${v.id}"/>">Chỉnh sửa</a>
-                <c:url value="/api/visitor/${v.id}" var="delete"/>
+                <c:url value="/api/visitor/${v.id}/" var="delete"/>
                 <button class="btn btn-danger" onclick="deleteVisitor('${delete}')">Xóa</button>
             </td>
         </tr>

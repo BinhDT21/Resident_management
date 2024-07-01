@@ -7,9 +7,15 @@ import java.util.List;
 import java.util.Map;
 
 public interface InvoiceService {
-    List<Resident> getDetailInvoiceForResident(Map<String, String> params);
     void createOrUpdateInvoice (Invoice invoice);
     void deleteInvoice (int id);
     Invoice getInvoiceById (int id);
     List<Invoice> getByResidentId(int residentId);
+    List<Object[]> getInvoiceByUserId (int userId, Map<String,String> params);
+    void updatePaymentProve (Invoice invoice);
+    
+    void createMultiple(Invoice invoice, List<Integer> residentIds);
+    
+    
+    
 }

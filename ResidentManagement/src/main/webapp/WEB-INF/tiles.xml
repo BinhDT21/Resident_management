@@ -20,18 +20,18 @@
         <put-attribute name="content" value="/WEB-INF/pages/resident.jsp" />
     </definition>
 
-    <definition name="electronicLocker" extends="baseLayout">
+    <definition name="electronic-lockers" extends="baseLayout">
         <put-attribute name="title" value="Quản lý tủ đồ" />
         <put-attribute name="content" value="/WEB-INF/pages/electronicLocker.jsp" />
     </definition>
 
     <definition name="item" extends="baseLayout">
-        <put-attribute name="title" value="Quản lý vật phẩm" />
+        <put-attribute name="title" value="Chi tiết tủ đồ" />
         <put-attribute name="content" value="/WEB-INF/pages/item.jsp" />
     </definition>
 
     <definition name="item-detail" extends="baseLayout">
-        <put-attribute name="title" value="Quản lý vật phẩm" />
+        <put-attribute name="title" value="Chi tiết hàng" />
         <put-attribute name="content" value="/WEB-INF/pages/item-detail.jsp" />
     </definition>
 
@@ -88,6 +88,11 @@
     <definition name="updateVisitor" extends="baseLayout">
         <put-attribute name="title" value="Chỉnh sửa thông tin khách" />
         <put-attribute name="content" value="/WEB-INF/pages/update_visitor.jsp" />
+    </definition>
+    
+    <definition name="invoice-create-multiple" extends="baseLayout">
+        <put-attribute name="title" value="Tao hoa don" />
+        <put-attribute name="content" value="/WEB-INF/pages/invoice-create-multiple.jsp" />
     </definition>
     
 </tiles-definitions>
