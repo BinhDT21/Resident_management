@@ -41,10 +41,10 @@ export const Header = () => {
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
                     <NavDropdown title="Tiện ích" id="basic-nav-dropdown">
-                        <Link to="/" className="nav-link">Thanh toán hóa đơn</Link>
+                        <Link to="/invoices" className="nav-link">Thanh toán hóa đơn</Link>
                         <Link to="/visitor_card" className="nav-link">Đăng ký thẻ xe</Link>
                         <Link to="/locker" className="nav-link">Tủ đồ của tôi</Link>
-                        <Link to="/" className="nav-link">Phản hồi</Link>
+                        <Link to="/feedbacks" className="nav-link">Phản hồi</Link>
                     </NavDropdown>
 
                     <OverlayTrigger

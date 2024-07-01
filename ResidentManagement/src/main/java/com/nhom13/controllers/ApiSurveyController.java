@@ -7,6 +7,7 @@ package com.nhom13.controllers;
 import com.nhom13.DTOs.AnswerDTO;
 import com.nhom13.DTOs.AnswerListDTO;
 import com.nhom13.DTOs.SurveyDTO;
+import com.nhom13.DTOs.UserSurveyDTO;
 import com.nhom13.DTOs.questionDTO;
 import com.nhom13.pojo.Answer;
 import com.nhom13.pojo.Question;
@@ -59,6 +60,12 @@ public class ApiSurveyController {
         this.surService.blockSurvey(id);
     }
     
+    @DeleteMapping("/surveys/delete/{surveyId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete (@PathVariable(value = "surveyId") int id){
+        this.surService.deleteSurvey(id);
+    }
+    
     @GetMapping("/surveys/")
     public ResponseEntity<List<Survey>> loadSurveys (){
         Map<String, String> params = new HashMap<>();
@@ -107,6 +114,24 @@ public class ApiSurveyController {
             a.setCreatedDate(new Date());
             this.answerService.createAnswer(a);
         }
+    }
+    
+    
+    @GetMapping(path = "/user/{userId}/surveys/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserSurveyDTO>> getSurveyByUserId (@PathVariable(value = "userId") int userId){
+        List<Object[]> listSurveys = this.surService.getSurveyByUserId(userId);
+        List<UserSurveyDTO> listDTO = new ArrayList<>();
+        
+        for(Object[] obj : listSurveys){
+            int surveyId = (int)obj[0];
+            String title = (String)obj[1];
+            
+            UserSurveyDTO us = new UserSurveyDTO(surveyId, title);
+            listDTO.add(us);
+        }
+        
+        
+        return new ResponseEntity<>(listDTO, HttpStatus.OK);
     }
     
 }

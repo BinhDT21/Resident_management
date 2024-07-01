@@ -14,9 +14,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import org.springframework.validation.BindingResult;
 
 @Controller
 public class ItemController {
+
     @Autowired
     private ItemService itemService;
     @Autowired
@@ -25,11 +27,10 @@ public class ItemController {
     private NotificationService notService;
     @Autowired
     private ResidentService resService;
-    
 
     @GetMapping("/electronic-lockers/{elId}/items")
     public String getAllItemByElId(@PathVariable int elId,
-                                   @RequestParam Map<String, String> params, Model model) {
+            @RequestParam Map<String, String> params, Model model) {
         ElectronicLocker el = electronicLockerService.getElectronicLockerById(elId);
         String residentName = el.getResidentId().getUserId().getLastName()
                 + " " + el.getResidentId().getUserId().getFirstName();
@@ -58,20 +59,34 @@ public class ItemController {
     }
 
     @PostMapping("/electronic-lockers/{elId}/items")
-    public String create(@ModelAttribute Item item, Model model) {
-        itemService.updatOrCreateItem(item);
-        
-        int lockerId = item.getElectronicLockerId().getId();
-        ElectronicLocker l = this.electronicLockerService.getElectronicLockerById(lockerId);
-        Resident r = this.resService.getResidentById(l.getResidentId().getId());
-        User u = this.resService.getUserById(r.getUserId().getId());
-        String token = u.getNotificationToken();
-        String title = "Thông báo";
-        String body = "Bạn vừa được nhận hàng";
+    public String create(@ModelAttribute(value = "item") Item item, Model model,
+            BindingResult result, @PathVariable(value = "elId") int elId) {
 
-        if (token != null && !token.isEmpty()) {
-            this.notService.sendNotification(token, title, body);
+        if (!result.hasErrors()) {
+            try {
+                
+                itemService.updatOrCreateItem(item);
+                
+                int lockerId = item.getElectronicLockerId().getId();
+                ElectronicLocker l = this.electronicLockerService.getElectronicLockerById(lockerId);
+                Resident r = this.resService.getResidentById(l.getResidentId().getId());
+                
+                //lay user -> lay token
+                User u = this.resService.getUserById(r.getUserId().getId());
+                String token = u.getNotificationToken();
+                String title = "Thông báo";
+                String body = "Bạn vừa được nhận hàng";
+
+                if (token != null && !token.isEmpty()) {
+                    this.notService.sendNotification(token, title, body);
+                }
+                
+                
+                return "redirect:/electronic-lockers/" + item.getElectronicLockerId().getId() + "/items";
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+            }
         }
-        return "redirect:/electronic-lockers/"+ item.getElectronicLockerId().getId() +"/items";
+        return "redirect:/electronic-lockers/" + item.getElectronicLockerId().getId() + "/items/create?error";
     }
 }

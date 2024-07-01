@@ -10,8 +10,42 @@
 <!DOCTYPE html>
 <h1 class="text-center text-dark mt-1">THÊM CƯ DÂN</h1>
 
-<c:url value="/resident" var="action" />
+<c:if test="${param.duplicate != null}">
+    <div class="alert alert-danger"> 
+        Người dùng này đã tồn tại, vui lòng kiểm tra lại thông tin
+    </div>
+</c:if>
+
+<c:if test="${param.error != null}">
+    <div class="alert alert-danger"> 
+        Cập nhật thất bại
+    </div>
+</c:if>
+
+<c:url value="/resident" var="action"/>
 <form:form method="post" action="${action}" modelAttribute="user">
+    <form:errors path="*" element="div" cssClass="alert alert-danger" />
+
+
+    <c:choose>
+        <c:when test="${user.id != null}">
+            <div class="form-floating mb-3 mt-3">
+                <form:input type="hidden" class="form-control"  id="id"  placeholder="id" path="id" />
+            </div>
+            <div class="form-floating mb-3 mt-3">
+                <form:input type="hidden" class="form-control"  id="avatar"  placeholder="avatar" path="avatar" />
+            </div>
+            <div class="form-floating mb-3 mt-3">
+                <form:input type="hidden" class="form-control"  id="role"  placeholder="role" path="role" />
+            </div>
+            <div class="form-floating mb-3 mt-3">
+                <form:input type="hidden" class="form-control"  id="active"  placeholder="active" path="active" />
+            </div>
+            <div class="form-floating mb-3 mt-3">
+                <form:input type="hidden" class="form-control"  id="id"  placeholder="notificationToken" path="notificationToken" />
+            </div>
+        </c:when>
+    </c:choose>
 
     <div class="form-floating mb-3 mt-3">
         <form:input  class="form-control"  id="firstName"  placeholder="Họ" path="firstName" />
@@ -58,18 +92,31 @@
         <label for="Username">Username</label>
     </div>
 
+
     <div class="form-floating mb-3 mt-3">
         <form:input class="form-control"  id="Password"  placeholder="Password" path="password" />
         <label for="Password">Password</label>
     </div>
 
-    <div class="form-floating mb-3 mt-3">
-        <button class="btn btn-primary mt-1" type="submit">
-            Thêm cư dân
-        </button>
-    </div>  
-        
-      
+
+    <c:choose>
+        <c:when test="${user.id == null}">
+            <div class="form-floating mb-3 mt-3">
+                <button class="btn btn-primary mt-1" type="submit">
+                    Thêm cư dân
+                </button>
+            </div>  
+        </c:when>
+        <c:otherwise>
+            <div class="form-floating mb-3 mt-3">
+                <button class="btn btn-primary mt-1" type="submit">
+                    Xác nhận chỉnh sửa
+                </button>
+            </div>  
+        </c:otherwise>
+    </c:choose>
+
+
+
 </form:form>
 
-    

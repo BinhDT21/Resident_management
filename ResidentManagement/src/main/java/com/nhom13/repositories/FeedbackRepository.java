@@ -13,7 +13,9 @@ import java.util.Map;
  * @author ADMIN
  */
 public interface FeedbackRepository {
-    List<Feedback> loadFeedbacks (Map<String, String> params);
+    List<Object[]> loadFeedbacks (Map<String, String> params);
     void solveFeedback (int id); //chuyen status -> 0
     Feedback getFeedbackById (int id);
+    void deleteFeedback (int id);  //xoa luon
+    void createFeedback (Feedback feedback, int userId);
 }

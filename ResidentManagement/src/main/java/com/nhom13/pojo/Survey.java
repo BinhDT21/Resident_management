@@ -40,7 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Survey.findAll", query = "SELECT s FROM Survey s"),
     @NamedQuery(name = "Survey.findById", query = "SELECT s FROM Survey s WHERE s.id = :id"),
     @NamedQuery(name = "Survey.findByTitle", query = "SELECT s FROM Survey s WHERE s.title = :title"),
-    @NamedQuery(name = "Survey.findByCreatedDate", query = "SELECT s FROM Survey s WHERE s.createdDate = :createdDate")})
+    @NamedQuery(name = "Survey.findByCreatedDate", query = "SELECT s FROM Survey s WHERE s.createdDate = :createdDate"),
+    @NamedQuery(name = "Survey.findByActive", query = "SELECT s FROM Survey s WHERE s.active = :active")})
 public class Survey implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,14 +51,16 @@ public class Survey implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
+    @NotNull(message = "{survey.title.nullErr}")
+    @Size(min = 1, max = 50, message = "{survey.title.sizeErr}")
     @Column(name = "title")
     private String title;
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
     private Date createdDate;
+    @Column(name = "active")
+    private Short active;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "surveyId")
     @JsonIgnore
     private Set<Question> questionSet;
@@ -65,8 +68,6 @@ public class Survey implements Serializable {
     @ManyToOne(optional = false)
     @JsonIgnore
     private Admin adminId;
-    @Column(name = "active")
-    private Short active;
 
     public Survey() {
     }
@@ -102,6 +103,14 @@ public class Survey implements Serializable {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Short getActive() {
+        return active;
+    }
+
+    public void setActive(Short active) {
+        this.active = active;
     }
 
     @XmlTransient
@@ -146,18 +155,4 @@ public class Survey implements Serializable {
         return "com.nhom13.pojo.Survey[ id=" + id + " ]";
     }
 
-    /**
-     * @return the active
-     */
-    public Short getActive() {
-        return active;
-    }
-
-    /**
-     * @param active the active to set
-     */
-    public void setActive(Short active) {
-        this.active = active;
-    }
-    
 }

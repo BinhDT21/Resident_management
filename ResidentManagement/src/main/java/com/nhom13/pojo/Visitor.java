@@ -38,36 +38,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Visitor.findAll", query = "SELECT v FROM Visitor v"),
     @NamedQuery(name = "Visitor.findById", query = "SELECT v FROM Visitor v WHERE v.id = :id"),
     @NamedQuery(name = "Visitor.findByName", query = "SELECT v FROM Visitor v WHERE v.name = :name"),
-    @NamedQuery(name = "Visitor.findByRelation", query = "SELECT v FROM Visitor v WHERE v.relation = :relation")})
+    @NamedQuery(name = "Visitor.findByRelation", query = "SELECT v FROM Visitor v WHERE v.relation = :relation"),
+    @NamedQuery(name = "Visitor.findByCreatedDate", query = "SELECT v FROM Visitor v WHERE v.createdDate = :createdDate"),
+    @NamedQuery(name = "Visitor.findByUpdatedDate", query = "SELECT v FROM Visitor v WHERE v.updatedDate = :updatedDate"),
+    @NamedQuery(name = "Visitor.findByActive", query = "SELECT v FROM Visitor v WHERE v.active = :active"),
+    @NamedQuery(name = "Visitor.findByStatus", query = "SELECT v FROM Visitor v WHERE v.status = :status")})
 public class Visitor implements Serializable {
-
-    /**
-     * @return the createdDate
-     */
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    /**
-     * @param createdDate the createdDate to set
-     */
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    /**
-     * @return the active
-     */
-    public Short getActive() {
-        return active;
-    }
-
-    /**
-     * @param active the active to set
-     */
-    public void setActive(Short active) {
-        this.active = active;
-    }
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -76,16 +52,15 @@ public class Visitor implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
+    @NotNull(message = "{visitor.name.nullErr}")
+    @Size(min = 1, max = 45, message = "{visitor.name.sizeErr}")
     @Column(name = "name")
     private String name;
-    @Size(max = 45)
+    @Basic(optional = false)
+    @NotNull(message = "{visitor.relation.nullErr}")
+    @Size(min = 1, max = 45, message = "{visitor.relation.sizeErr}")
     @Column(name = "relation")
     private String relation;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "visitorId")
-    @JsonIgnore
-    private Set<ResidentVisitor> residentVisitorSet;
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
@@ -99,7 +74,9 @@ public class Visitor implements Serializable {
     @Size(max = 45)
     @Column(name = "status")
     private String status;
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "visitorId")
+    @JsonIgnore
+    private Set<ResidentVisitor> residentVisitorSet;
 
     public Visitor() {
     }
@@ -108,9 +85,10 @@ public class Visitor implements Serializable {
         this.id = id;
     }
 
-    public Visitor(Integer id, String name) {
+    public Visitor(Integer id, String name, String relation) {
         this.id = id;
         this.name = name;
+        this.relation = relation;
     }
 
     public Integer getId() {
@@ -135,6 +113,38 @@ public class Visitor implements Serializable {
 
     public void setRelation(String relation) {
         this.relation = relation;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public Short getActive() {
+        return active;
+    }
+
+    public void setActive(Short active) {
+        this.active = active;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @XmlTransient
@@ -169,34 +179,6 @@ public class Visitor implements Serializable {
     @Override
     public String toString() {
         return "com.nhom13.pojo.Visitor[ id=" + id + " ]";
-    }
-
-    /**
-     * @return the status
-     */
-    public String getStatus() {
-        return status;
-    }
-
-    /**
-     * @param status the status to set
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    /**
-     * @return the updatedDate
-     */
-    public Date getUpdatedDate() {
-        return updatedDate;
-    }
-
-    /**
-     * @param updatedDate the updatedDate to set
-     */
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
     }
     
 }

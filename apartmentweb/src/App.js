@@ -16,6 +16,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import { Toast } from 'react-bootstrap';
 import Surveys from './components/Survey/Surveys';
 import SurveyDetail from './components/Survey/SurveyDetail';
+import UserInvoice from './components/Invoice/UserInvoices';
+import Feedback from './components/Feedback/Feedback';
 
 
 function App() {
@@ -38,25 +40,16 @@ function App() {
         <DispatchContext.Provider value={useDispatch}>
           <Routes>
             <Route path='/' element={<Home />} />
-          </Routes>
-          <Routes>
             <Route path='/visitor_card' element={<VistorCard />} />
-          </Routes>
-          <Routes>
             <Route path='/login' element={<Login />} />
-          </Routes>
-          <Routes>
             <Route path='/update' element={<UpdateUser />} />
-          </Routes>
-          <Routes>
             <Route path='/locker' element={<Locker />} />
-          </Routes>
-          <Routes>
             <Route path='/surveys' element={<Surveys />} />
-          </Routes>
-          <Routes>
             <Route path='/surveys/:id' element={<SurveyDetail />} />
+            <Route path='/invoices' element={<UserInvoice/>} />
+            <Route path='/feedbacks' element={<Feedback/>}/>
           </Routes>
+          
         </DispatchContext.Provider>
       </UserContext.Provider>
     </BrowserRouter>

@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from "react";
 import { UserContext } from "../configs/Contexts";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Alert, Button, Form } from "react-bootstrap";
+import { Alert, Button, Form, Spinner } from "react-bootstrap";
 import { authApi, endpoints } from "../configs/APIs";
 
 const UpdateUser = () => {
@@ -30,6 +30,7 @@ const UpdateUser = () => {
     const [user, setUser] = useState(current_user)
     const avatar = useRef()
     const nav = useNavigate()
+    const [loading, setLoading] = useState(false)
 
     const change = (event, field) => {
         setUser(current => {
@@ -56,13 +57,8 @@ const UpdateUser = () => {
                 form.append(k, user[k]);
         form.append('file', avatar.current.files[0]);
 
-        for (var i of form.entries()) {
-            console.log(i[0] + ': ' + i[1])
-            if (i[0] === 'file')
-                console.info(i[1])
-        }
-
         try {
+            setLoading(true)
             let res = await authApi().post(endpoints['update-user'], form, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -72,6 +68,8 @@ const UpdateUser = () => {
                 window.location.reload()
         } catch (ex) {
             console.error(ex);
+        } finally {
+            setLoading(false)
         }
 
     }
@@ -99,9 +97,17 @@ const UpdateUser = () => {
                                 <Form.Label>Chọn ảnh đại diện</Form.Label>
                                 <Form.Control ref={avatar} type="file" accept=".png,.jpg" placeholder="Ảnh đại diện" />
                             </Form.Group>
-                            <div className="d-flex justify-content-center">
-                                <Button variant="primary" type="submit" className="mb-1 mt-1 ">Xác nhận</Button>
-                            </div>
+
+                            {loading === true ? <>
+                                <div className="d-flex justify-content-center">
+                                    <Spinner variant="primary" />
+                                </div>
+                            </> : <>
+                                <div className="d-flex justify-content-center">
+                                    <Button variant="primary" type="submit" className="mb-1 mt-1 ">Xác nhận</Button>
+                                </div>
+                            </>}
+
                         </Form>
                     </div>
                 </div>

@@ -50,7 +50,8 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
     @NamedQuery(name = "User.findByAvatar", query = "SELECT u FROM User u WHERE u.avatar = :avatar"),
     @NamedQuery(name = "User.findByRole", query = "SELECT u FROM User u WHERE u.role = :role"),
-    @NamedQuery(name = "User.findByActive", query = "SELECT u FROM User u WHERE u.active = :active")})
+    @NamedQuery(name = "User.findByActive", query = "SELECT u FROM User u WHERE u.active = :active"),
+    @NamedQuery(name = "User.findByNotificationToken", query = "SELECT u FROM User u WHERE u.notificationToken = :notificationToken")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,13 +61,13 @@ public class User implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 30)
+    @NotNull(message = "{user.firstName.nullErr}")
+    @Size(min = 1, max = 30, message = "{user.firstName.sizeErr}")
     @Column(name = "first_name")
     private String firstName;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
+    @NotNull(message = "{user.lastName.nullErr}")
+    @Size(min = 1, max = 50, message = "{user.lastName.sizeErr}")
     @Column(name = "last_name")
     private String lastName;
     @Column(name = "gender")
@@ -79,17 +80,25 @@ public class User implements Serializable {
     @Column(name = "address")
     private String address;
     // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
-    @Size(max = 10)
-    @Column(name = "phone")
+    @Basic(optional = false)
+    @NotNull(message = "{user.phone.nullErr}")
+    @Size(min = 1, max = 10, message = "{user.phone.sizeErr}")
+    @Column(name = "phone", unique = true)
     private String phone;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @Size(max = 45)
-    @Column(name = "email")
+    @Basic(optional = false)
+    @NotNull(message = "{user.email.nullErr}")
+    @Size(min = 1, max = 45, message = "{user.email.sizeErr}")
+    @Column(name = "email", unique = true)
     private String email;
-    @Size(max = 45)
-    @Column(name = "username")
+    @Basic(optional = false)
+    @NotNull(message = "{user.username.nullErr}")
+    @Size(min = 1, max = 45, message = "{user.username.sizeErr}")
+    @Column(name = "username", unique = true)
     private String username;
-    @Size(max = 255)
+    @Basic(optional = false)
+    @NotNull(message = "{user.password.nullErr}")
+    @Size(min = 1, max = 255, message = "{user.password.sizeErr}")
     @Column(name = "password")
     private String password;
     @Size(max = 255)
@@ -100,17 +109,17 @@ public class User implements Serializable {
     private String role;
     @Column(name = "active")
     private Short active;
+    @Size(max = 255)
+    @Column(name = "notification_token")
+    private String notificationToken;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     @JsonIgnore
     private Set<Admin> adminSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     @JsonIgnore
     private Set<Resident> residentSet;
-    @Size(max = 255)
-    @Column(name = "notification_token")
-    private String notificationToken;
     
-    @Transient
+     @Transient
     private MultipartFile file;
 
     public User() {
@@ -120,10 +129,14 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public User(Integer id, String firstName, String lastName) {
+    public User(Integer id, String firstName, String lastName, String phone, String email, String username, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
+        this.username = username;
+        this.password = password;
     }
 
     public Integer getId() {
@@ -230,6 +243,14 @@ public class User implements Serializable {
         this.active = active;
     }
 
+    public String getNotificationToken() {
+        return notificationToken;
+    }
+
+    public void setNotificationToken(String notificationToken) {
+        this.notificationToken = notificationToken;
+    }
+
     @XmlTransient
     public Set<Admin> getAdminSet() {
         return adminSet;
@@ -285,20 +306,6 @@ public class User implements Serializable {
      */
     public void setFile(MultipartFile file) {
         this.file = file;
-    }
-
-    /**
-     * @return the notificationToken
-     */
-    public String getNotificationToken() {
-        return notificationToken;
-    }
-
-    /**
-     * @param notificationToken the notificationToken to set
-     */
-    public void setNotificationToken(String notificationToken) {
-        this.notificationToken = notificationToken;
     }
     
 }

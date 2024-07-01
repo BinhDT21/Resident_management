@@ -27,8 +27,10 @@ public class IndexController {
 
     @RequestMapping("/")
     public String index(Model model, @RequestParam() Map<String, String> params) {
-
         model.addAttribute("residents", this.resSer.loadResident(params));
+        model.addAttribute("totalPages", params.get("totalPages"));
+        model.addAttribute("currentPage", params.get("currentPage"));
+        
         return "index";
     }
 }

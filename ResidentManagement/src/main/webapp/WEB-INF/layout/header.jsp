@@ -40,8 +40,8 @@
                     <li><a class="nav-link" href="${logout}">Đăng xuất</a></li>
                     </c:if>
             </ul>
-            <form class="d-flex" action="<c:url value="/"/>">
-                <input class="form-control me-2" type="text" placeholder="Tên cư dân" name="name">
+            <form class="d-flex" >
+                <input class="form-control me-2" type="text" placeholder="Search" name="kw">
                 <button class="btn btn-primary" type="submit">Search</button>
             </form>
         </div>

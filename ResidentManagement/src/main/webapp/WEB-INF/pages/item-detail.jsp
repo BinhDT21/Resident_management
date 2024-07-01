@@ -7,13 +7,22 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<h1 class="text-center text-dark mt-1">THÊM CƯ DÂN</h1>
+<h1 class="text-center text-dark mt-1">Chi tiết hàng</h1>
+
+
+<c:if test="${param.error != null}">
+    <div class="alert alert-danger"> 
+        Vui lòng nhập thông tin hàng
+    </div>
+</c:if>
 
 <c:url value="/electronic-lockers/${elId}/items/" var="action" />
 <form:form method="post" action="${action}" modelAttribute="item">
     <form:hidden id="id"  path="id" />
     <form:hidden id="electronicLockerId" path="electronicLockerId" />
-
+    
+    <form:errors path="*" element="div" cssClass="alert alert-danger" />
+    
     <div class="form-floating mb-3 mt-3">
         <form:input  class="form-control"  id="description"  placeholder="Mô tả" path="description" />
         <label for="description">Mô tả</label>

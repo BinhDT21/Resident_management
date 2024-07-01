@@ -14,9 +14,13 @@
 
 <c:url value="/add_survey" var="action" />
 <form:form method="post" action="${action}"  modelAttribute="survey" id="surveyForm">
-
+    <form:errors path="*" element="div" cssClass="alert alert-danger" />
+    
+    <div id="alert">
+        
+    </div>
     <div class="form-floating mb-3 mt-3">
-        <form:input  class="form-control"  id="title"  placeholder="Vd: Khảo sát đợt 1 " path="title" />
+        <form:input  class="form-control"   id="title"   placeholder="Vd: Khảo sát đợt 1 " path="title" />
         <label for="title">Đặt tựa đề cho lần khảo sát</label>
     </div>
 
@@ -59,6 +63,8 @@
     }
 
     function submitForm() {
+        
+        const title = document.getElementById('title');
 
         for (var i = 1, max = questionCount; i <= max; i++) {
             var ct = document.getElementById('questions' + i);
@@ -72,10 +78,18 @@
         input.name = 'contentsList';
         input.value = JSON.stringify(contentsList); // Chuyển danh sách thành chuỗi JSON để gửi
         form.appendChild(input);
-
-
         
-        document.getElementById('surveyForm').submit();
+        if(title.value !== null && title.value !== ""){
+            document.getElementById('surveyForm').submit();
+        }else
+        {
+            const alertContainer = document.getElementById('alert');
+            alertContainer.className = "alert alert-danger";
+            alertContainer.textContent = "Vui lòng nhập tựa đề cho đợt khảo sát";
+        }
+        
+        
+        
     }
 
 </script>

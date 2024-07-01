@@ -5,9 +5,9 @@
 package com.nhom13.pojo;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,9 +20,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -39,7 +41,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Invoice.findByDueDate", query = "SELECT i FROM Invoice i WHERE i.dueDate = :dueDate"),
     @NamedQuery(name = "Invoice.findByStatus", query = "SELECT i FROM Invoice i WHERE i.status = :status"),
     @NamedQuery(name = "Invoice.findByPaymentProve", query = "SELECT i FROM Invoice i WHERE i.paymentProve = :paymentProve"),
-    @NamedQuery(name = "Invoice.findByCreatedDate", query = "SELECT i FROM Invoice i WHERE i.createdDate = :createdDate")})
+    @NamedQuery(name = "Invoice.findByCreatedDate", query = "SELECT i FROM Invoice i WHERE i.createdDate = :createdDate"),
+    @NamedQuery(name = "Invoice.findByActive", query = "SELECT i FROM Invoice i WHERE i.active = :active")})
 public class Invoice implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,8 +61,8 @@ public class Invoice implements Serializable {
     @Column(name = "amount")
     private long amount;
     @Column(name = "due_date")
-//    @Temporal(TemporalType.DATE)
-    private LocalDate dueDate;
+    @Temporal(TemporalType.DATE)
+    private Date dueDate;
     @Size(max = 45)
     @Column(name = "status")
     private String status;
@@ -69,11 +72,14 @@ public class Invoice implements Serializable {
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-    @JoinColumn(name = "resident_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Resident residentId;
     @Column(name = "active")
-    private Short active;    
+    private Short active;
+    @JoinColumn(name = "resident_id", referencedColumnName = "id")
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    private Resident residentId;
+    @Transient
+    private MultipartFile file;
+
     public Invoice() {
     }
 
@@ -111,11 +117,11 @@ public class Invoice implements Serializable {
         this.amount = amount;
     }
 
-    public LocalDate getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDate dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -183,4 +189,19 @@ public class Invoice implements Serializable {
     public String toString() {
         return "com.nhom13.pojo.Invoice[ id=" + id + " ]";
     }
+
+    /**
+     * @return the file
+     */
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+    
 }

@@ -12,6 +12,7 @@
 
 <c:url value="/visitor" var="action" />
 <form:form method="post" action="${action}" modelAttribute="visitor">
+    <form:errors path="*" element="div" cssClass="alert alert-danger" />
     <div class="form-floating mb-3 mt-3">
         <form:input  class="form-control"  id="id"  placeholder="id" path="id" />
         <label for="id">Id</label>

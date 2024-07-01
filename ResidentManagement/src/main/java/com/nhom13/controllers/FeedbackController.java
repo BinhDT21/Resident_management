@@ -25,6 +25,8 @@ public class FeedbackController {
     @RequestMapping("/feedbacks")
     public String feedback (@RequestParam() Map<String, String> params, Model model){
         model.addAttribute("feedbacks",this.feedbackSer.loadFeedbacks(params));
+        model.addAttribute("totalPages", params.get("totalPages"));
+        model.addAttribute("currentPage", params.get("currentPage"));
         return "feedbacks";
     }
     

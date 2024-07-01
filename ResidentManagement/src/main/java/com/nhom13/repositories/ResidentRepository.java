@@ -19,4 +19,6 @@ public interface ResidentRepository {
     void deleteUser(int id);    //deactive user
     Resident getResidentByUserId (int userId);
     Resident getResidentById (int id);
+    List<Object[]> getResidentWithInvoices (Map<String, String> params);
+    List<Resident> getAll();
 }

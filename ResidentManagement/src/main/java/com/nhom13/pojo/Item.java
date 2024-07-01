@@ -36,7 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Item.findAll", query = "SELECT i FROM Item i"),
     @NamedQuery(name = "Item.findById", query = "SELECT i FROM Item i WHERE i.id = :id"),
     @NamedQuery(name = "Item.findByDescription", query = "SELECT i FROM Item i WHERE i.description = :description"),
-    @NamedQuery(name = "Item.findByStatus", query = "SELECT i FROM Item i WHERE i.status = :status")})
+    @NamedQuery(name = "Item.findByStatus", query = "SELECT i FROM Item i WHERE i.status = :status"),
+    @NamedQuery(name = "Item.findByCreatedDate", query = "SELECT i FROM Item i WHERE i.createdDate = :createdDate")})
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,21 +46,23 @@ public class Item implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Size(max = 255)
+    @Basic(optional = false)
+    @NotNull(message = "{item.description.sizeErr}")
+    @Size(min = 1, max = 255, message = "{item.description.sizeErr}")
     @Column(name = "description")
     private String description;
     @Basic(optional = false)
     @NotNull
     @Column(name = "status")
     private short status;
-    @JoinColumn(name = "electronic_locker_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    @JsonIgnore
-    private ElectronicLocker electronicLockerId;
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
     private Date createdDate;
+    @JoinColumn(name = "electronic_locker_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    @JsonIgnore
+    private ElectronicLocker electronicLockerId;
 
     public Item() {
     }
@@ -68,8 +71,9 @@ public class Item implements Serializable {
         this.id = id;
     }
 
-    public Item(Integer id, short status) {
+    public Item(Integer id, String description, short status) {
         this.id = id;
+        this.description = description;
         this.status = status;
     }
 
@@ -95,6 +99,14 @@ public class Item implements Serializable {
 
     public void setStatus(short status) {
         this.status = status;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public ElectronicLocker getElectronicLockerId() {
@@ -128,20 +140,6 @@ public class Item implements Serializable {
     @Override
     public String toString() {
         return "com.nhom13.pojo.Item[ id=" + id + " ]";
-    }
-
-    /**
-     * @return the createdDate
-     */
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    /**
-     * @param createdDate the createdDate to set
-     */
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
     }
     
 }

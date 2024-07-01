@@ -35,17 +35,35 @@
             <td>${r[3]}</td>
             <td>${r[4]}</td>
             <td>${r[5]}</td>
+            <td>
+                <c:if test="${r[6]==1}">
+                    <c:url value="/api/resident/${r[7]}" var="deleteUrl"/>
+                    <button onclick="confirmDelete('${deleteUrl}')" class="btn btn-warning" >Khóa cư dân</button>
+                </c:if>
+                <a href="<c:url value="/resident/${r[0]}/"/>"  class="btn btn-primary" >&#9881;</a>
 
-            <c:if test="${r[6]==1}">
-                <c:url value="/api/resident/${r[7]}" var="deleteUrl"/>
-                <td><button onclick="deleteResident('${deleteUrl}')" class="btn btn-danger" >Xóa</button></td>
-            </c:if>
-
-
+                <c:url value="/api/resident/delete/${r[0]}" var="delete"/>
+                <button onclick="confirmDeleteResident('${delete}')" class="btn btn-danger">&times;</button>
+            </td>
         </tr>
 
     </c:forEach>
 
 </table>
+<nav>
+    <ul class="pagination">
+        <c:if test="${currentPage > 1}">
+            <li class="page-item"><a class="page-link" href="?page=${currentPage - 1}">Previous</a></li>
+            </c:if>
+            <c:forEach var="i" begin="1" end="${totalPages}">
+            <li class="page-item <c:if test='${i == currentPage}'>active</c:if>'">
+                <a class="page-link" href="?page=${i}">${i}</a>
+            </li>
+        </c:forEach>
+        <c:if test="${currentPage < totalPages}">
+            <li class="page-item"><a class="page-link" href="?page=${currentPage + 1}">Next</a></li>
+            </c:if>
+    </ul>
+</nav>
 
 <script src="<c:url value="/js/script.js" />"></script>

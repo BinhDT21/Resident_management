@@ -54,16 +54,40 @@
 
             <td>${f[5]}</td>
 
-            <c:if test="${f[4] == 0}">
-                <td>
-                    <c:url value="/api/feedbacks/${f[0]}" var="solved"/>
-                    <button onclick="solveFeedback('${solved}')" class="btn btn-success" >Xử lý</button>
-                </td>
-            </c:if>
+
+
+            <td>
+                <c:choose>
+                    <c:when test="${f[4] == 0}">
+                        <c:url value="/api/feedbacks/${f[0]}" var="solved"/>
+                        <button onclick="solveFeedback('${solved}')" class="btn btn-success" >Xử lý</button>
+                    </c:when>
+                    <c:otherwise>
+                        <c:url value="/api/feedbacks/delete/${f[0]}" var="delete"/>
+                        <button onclick="confirmDeleteFeedback('${delete}')"  class="btn btn-danger" >&times;</button>
+                    </c:otherwise>
+                </c:choose>
+            </td>
 
 
         </tr>
     </c:forEach>
 </table>
+
+<nav>
+    <ul class="pagination">
+        <c:if test="${currentPage > 1}">
+            <li class="page-item"><a class="page-link" href="?page=${currentPage - 1}">Previous</a></li>
+            </c:if>
+            <c:forEach var="i" begin="1" end="${totalPages}">
+            <li class="page-item <c:if test='${i == currentPage}'>active</c:if>'">
+                <a class="page-link" href="?page=${i}">${i}</a>
+            </li>
+        </c:forEach>
+        <c:if test="${currentPage < totalPages}">
+            <li class="page-item"><a class="page-link" href="?page=${currentPage + 1}">Next</a></li>
+            </c:if>
+    </ul>
+</nav>
 
 <script src="<c:url value="/js/script.js" />"></script>

@@ -12,13 +12,16 @@ import com.nhom13.repositories.UserRepository;
 import com.nhom13.services.UserService;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -97,6 +100,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateToken(User u) {
         this.userRepo.updateToken(u);
+    }
+    
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal().equals("anonymousUser"))
+            throw new RuntimeException("Unauthenticated user!");
+        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        return getUserByUsername(username );
+    }
+
+    @Override
+    public List<User> listAllUser() {
+        return this.userRepo.listAllUser();
+    }
+
+    @Override
+    public void deleteUser(int userId) {
+        this.userRepo.deleteUser(userId);
     }
 
 }

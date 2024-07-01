@@ -52,4 +52,14 @@ public class ResidentServiceImpl implements ResidentService{
         return this.resRepo.getResidentById(id);
     }
 
+    @Override
+    public List<Object[]> getResidentWithInvoices(Map<String, String> params) {
+        return this.resRepo.getResidentWithInvoices(params);
+    }
+
+    @Override
+    public List<Resident> getAll() {
+        return this.resRepo.getAll();
+    }
+
 }

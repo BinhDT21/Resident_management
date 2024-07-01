@@ -6,10 +6,13 @@ package com.nhom13.repositories.impl;
 
 import com.nhom13.pojo.Admin;
 import com.nhom13.pojo.ElectronicLocker;
+import com.nhom13.pojo.Invoice;
 import com.nhom13.pojo.Resident;
 import com.nhom13.pojo.User;
+import com.nhom13.repositories.ResidentRepository;
 import com.nhom13.repositories.UserRepository;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -34,9 +37,10 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
-    
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private ResidentRepository residentRepository;
 
     @Override
     public User getUserByUsername(String username) {
@@ -56,18 +60,34 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void addResident(User u) {
         Session s = this.factory.getObject().getCurrentSession();
-        u.setRole("resident");
-        u.setActive(Short.parseShort("1"));
-        s.save(u);
 
-        Resident r = new Resident();
-        r.setBalance(Long.parseLong("0"));
-        r.setUserId(u);
-        s.save(r);
+        if (u.getId() != null) {
+            s.update(u);
+        } else {
+            u.setRole("resident");
+            u.setActive(Short.parseShort("1"));
+            s.save(u);
 
-        ElectronicLocker l = new ElectronicLocker();
-        l.setResidentId(r);
-        s.save(l);
+            Resident r = new Resident();
+            r.setBalance(Long.parseLong("0"));
+            r.setUserId(u);
+            s.save(r);
+
+            ElectronicLocker l = new ElectronicLocker();
+            l.setResidentId(r);
+            s.save(l);
+            
+            Invoice i = new Invoice();
+            i.setAmount(10000000);
+            i.setActive(Short.parseShort("1"));
+            i.setCreatedDate(new Date());
+            i.setDueDate(new Date());
+            i.setName("Phí đặt cọc");
+            i.setStatus("paid");
+            i.setResidentId(r);
+            s.save(i);
+        }
+
     }
 
     @Override
@@ -89,31 +109,31 @@ public class UserRepositoryImpl implements UserRepository {
         CriteriaQuery<Object> q = b.createQuery(Object.class);
         Root rU = q.from(User.class);
         Root rA = q.from(Admin.class);
-        
+
         q.select(rA);
-        
+
         List<Predicate> predicates = new ArrayList<>();
-        
+
         predicates.add(b.equal(rA.get("userId"), rU.get("id")));
         predicates.add(b.equal(rU.get("username"), username));
-        
+
         q.where(predicates.toArray(Predicate[]::new));
-        
+
         Query query = s.createQuery(q);
-        return (Admin)query.getSingleResult();
+        return (Admin) query.getSingleResult();
     }
 
     @Override
     public boolean authUser(String username, String password) {
         User u = this.getUserByUsername(username);
-        
+
         return this.passwordEncoder.matches(password, u.getPassword());
     }
 
     @Override
     public void updateUser(User u) {
         Session s = this.factory.getObject().getCurrentSession();
-        User user = s.get(User.class,u.getId());
+        User user = s.get(User.class, u.getId());
         user.setPassword(u.getPassword());
         user.setAvatar(u.getAvatar());
         s.save(user);
@@ -122,8 +142,31 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void updateToken(User u) {
         Session s = this.factory.getObject().getCurrentSession();
-        User user = s.get(User.class,u.getId());
+        User user = s.get(User.class, u.getId());
         user.setNotificationToken(u.getNotificationToken());
         s.save(user);
+    }
+
+    @Override
+    public List<User> listAllUser() {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<User> q = b.createQuery(User.class);
+        Root r = q.from(User.class);
+        q.select(r);
+
+        q.where(b.equal(r.get("active"), Short.parseShort("1")));
+
+        Query query = s.createQuery(q);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public void deleteUser(int userId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Resident r = this.residentRepository.getResidentById(userId);
+        User u = r.getUserId();
+        s.delete(u);
     }
 }

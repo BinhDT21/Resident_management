@@ -6,9 +6,11 @@ package com.nhom13.controllers;
 
 import com.nhom13.pojo.User;
 import com.nhom13.services.UserService;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,23 +21,32 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Controller
 public class AdminController {
-    
+
     @Autowired
     private UserService userSer;
 
     @GetMapping("/admin")
     public String addAdmin(Model model) {
-        model.addAttribute("user",new User());
+        model.addAttribute("user", new User());
         return "admin";
     }
-    
+
     @PostMapping("/admin")
-    public String createUser (@ModelAttribute(value = "user") User u){
-        
-        this.userSer.addAdmin(u);
-        return "redirect:/";
+    public String createUser(@ModelAttribute(value = "user") @Valid User u,
+            BindingResult result) {
+
+        if (!result.hasErrors()) {
+            try {
+                this.userSer.addAdmin(u);
+                return "redirect:/";
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+
+                return "redirect:/admin?duplicate";
+            }
+        }
+        return "admin";
+
     }
-    
-    
 
 }
